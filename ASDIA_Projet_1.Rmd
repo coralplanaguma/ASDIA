@@ -76,7 +76,17 @@ Démontrer que
 $$
 h(p,p^\prime) = \mathbb{KL}(p \| p^\prime) + h(p)  \geq h(p) \, , 
 $$
-où $\mathbb{KL}(p \| p^\prime)$ est la divergence Kullback-Leibler et $h(p)$ l'entropie de $p$.   
+où $\mathbb{KL}(p \| p^\prime)$ est la divergence Kullback-Leibler et $h(p)$ l'entropie de $p$.
+
+$$
+\begin{align}
+\mathbb{KL}(p \| p^\prime) &= p(y = 0) \log \frac{p(y = 0)}{p \prime y = 0} + p(y =1) \log \frac{p(y=1)}{p \prime (y = 1)}\\
+&= h(p, p\prime) + p(y=0)\log p(y=0) + p(y=1) \log p(y=1)\\
+&= h(p, p \prime) - h(p)
+\end{align}
+$$
+
+Comme la divergence de Kulback-Leibler est positive, on obtient bien l'inégalité attendue.
 
 
 * **Entropie croisée et log-loss ** : On appelle $q_{.}({\bf x})$ la loi de Bernoulli de paramètre $q({\bf x})$. Démontrer que 
@@ -170,7 +180,8 @@ La formule peut se généraliser à l'utilisation de plusieurs couches de neuron
 $$
  q({\bf x}, {\bf \theta}) = \sigma( {\bf W_0}^T \sigma({\bf W_1}^T \sigma({\bf W_2}^T \sigma({\bf W_3}^T{\bf x})))) \, , \quad {\bf x} \in \mathbb{R}^D.
 $$
-![Un réseau de neurones artificiels. Le réseau prend une variable de dimension 3 en entrée et la classe en deux catégories (softmax) en sortie. Il y a une couche cachée possédant 4 neurones.](./Artificial_neural_network.svg.png)
+![Un réseau de neurones artificiels. Le réseau prend une variable de dimension 3 en entrée et la classe en deux catégories (softmax) en sortie. Il y a une couche cachée possédant 4 neurones.]
+<!--(./Artificial_neural_network.svg.png)-->
 
 ### Gradient stochastique
 
@@ -255,12 +266,12 @@ Les données sont accessibles depuis la librairie R `keras` qui les télécharge
 
 ```{r eval = FALSE}
 # comment 1
-  boo_train <- y_train == change_me | y_train == change_moi 
+  boo_train <- y_train == 2 | y_train == 7 
   x_train <- mnist$train$x[boo_train,,]
   y_train <- mnist$train$y[boo_train]
 
 # comment 2
-  boo_test <- y_test == change_me | y_test == change_moi 
+  boo_test <- y_test == 2 | y_test == 7
   x_test <- mnist$test$x[boo_test,,]
   y_test <- mnist$test$y[boo_test]
 ```
@@ -299,8 +310,8 @@ Les données sont accessibles depuis la librairie R `keras` qui les télécharge
 * Les données de classe sont des entiers 2,7. Convertir ces données en variables booléennes ou binaires. La valeur 1 ou `TRUE` correspondra à un 7.
   
 ```{r eval = FALSE}
-  y_train <- change_moi
-  y_test <-  change_me
+  y_train <- y_train == 7
+  y_test <-  y_test == 7
 ```
 
 
