@@ -249,7 +249,7 @@ Les données de caractères manuscrits sont issues de la base  [MNIST](https://f
 
 ## Lecture des données
 
-Les données sont accessibles depuis la librairie R `keras` qui les télécharge directement depuis l'url de dépot (il faut donc être connecté à internet pour réaliser le TP).  Chaque donnée est représentée par un tableau 3d (`array`) contenant les informations (images, width, height) en niveaux de gris. Pour coder le vecteur ${\bf x}$, nous aurons besoin de vectoriser ces données. Pour ne pas se limiter aux tutoriaux disponibles sur le web, nous nous intéressons à la reconnaissance des chiffres $2$ et 7. 
+Les données sont accessibles depuis la librairie R `keras` qui les télécharge directement depuis l'url de dépot (il faut donc être connecté à internet pour réaliser le TP).  Chaque donnée est représentée par un tableau 3d (`array`) contenant les informations (images, width, height) en niveaux de gris. Pour coder le vecteur ${\bf x}$, nous aurons besoin de vectoriser ces données. Pour ne pas se limiter aux tutoriaux disponibles sur le web, nous nous intéressons à la reconnaissance des chiffres $2$ et $7$. 
 
 * Lire les données MNIST. Il y a 4 ensembles de variables. 
 ```{r}
@@ -262,15 +262,15 @@ Les données sont accessibles depuis la librairie R `keras` qui les télécharge
   y_test <- mnist$test$y
 ```
 
-* Filtrer les données correspondant aux chiffres $2$ et 7. Commenter et compléter le code suivant. Exécuter le code en changeant l'option de chunck. 
+* Filtrer les données correspondant aux chiffres $2$ et $7$. Commenter et compléter le code suivant. Exécuter le code en changeant l'option de chunck. 
 
 ```{r eval = FALSE}
-# comment 1
+# On conserve les 2 et les 7 uniquement
   boo_train <- y_train == 2 | y_train == 7 
   x_train <- mnist$train$x[boo_train,,]
   y_train <- mnist$train$y[boo_train]
 
-# comment 2
+# Idem pour le set de test
   boo_test <- y_test == 2 | y_test == 7
   x_test <- mnist$test$x[boo_test,,]
   y_test <- mnist$test$y[boo_test]
@@ -326,10 +326,14 @@ Les données sont accessibles depuis la librairie R `keras` qui les télécharge
 # commenter les lignes suivantes
   model <- keras_model_sequential() 
   model %>% 
+    # Initialisation de la première couche avec fonctoin d'activation "relu" et 256 neurones.
     layer_dense(units = 256, activation = 'relu', input_shape = 784) %>% 
+    # On associe aléatoirement la valeur 0 à 50% des imahes d'entrée pour éviter l'over fitting.
     layer_dropout(rate = 0.5) %>% 
+    # Initialisation de la deuxième couche avec 128 neurones.
     layer_dense(units = 128, activation = 'relu') %>%
     layer_dropout(rate = 0.5) %>%
+    # Initialisation de dernière couche
     layer_dense(units = 1, activation = 'sigmoid')
 ```
 
@@ -337,7 +341,7 @@ Les données sont accessibles depuis la librairie R `keras` qui les télécharge
 
 ```{r}
 terme <- c("units = 256", "input_shape")
-definition <- c("Dimension de la première couche cachée (W_2)", "A compléter")
+definition <- c("Dimension de la première couche cachée (W_2)", "Dimension des observations")
 data.frame(terme, definition)
 ```
 
@@ -348,9 +352,9 @@ data.frame(terme, definition)
 ```{r eval = FALSE}
 # commenter et compléter les lignes suivantes  
   model %>% compile(
-    loss = 'also_sprach_zarathustra',
-    optimizer = optimizer_rmsprop(lr = 0.001, rho = O, decay = 0),
-    metrics = c('ex_nihilo_nihil')
+    loss = 'binary_crossentropy',
+    optimizer = optimizer_rmsprop(lr = 0.001, rho = 0.9, decay = 0),
+    metrics = c('accuracy')
 )
 ```
 
@@ -358,7 +362,7 @@ data.frame(terme, definition)
 
 ```{r}
 terme <- c("loss", "optimizer", "lr", "rho", "decay", "accuracy")
-definition <- c("A compléter","","","","","")
+definition <- c("Fonction de perte","Méthode de gradient stochastique","Taux d'apprentissage (pas dans la descente de gradient)","Facteur de décroissance moyenne du gradient","Baisse du taux d'apprentissage à chaque itération","Précision utilisée pour mesurer la pertinence du modèle")
 data.frame(terme, definition)
 ```
 
@@ -367,7 +371,7 @@ data.frame(terme, definition)
 * Allons-y Alonso, pour ajuster le réseau (apprentissage)
 
 ```{r, eval = FALSE}
-  history <- carpe_diem %>% fit(
+  history <- model %>% fit(
                         x_train, 
                         y_train, 
                         epochs = 20, 
@@ -377,19 +381,23 @@ data.frame(terme, definition)
 ```
 
 * Donner un tableau de correspondance entre les notions mathématiques introduites dans la section précédente et les termes apparaissant dans l'apprentissage du modèle. 
-
-* Quelle est signification des courbes `loss` et `val_loss` que l'on voit tracées. 
+```{r}
+terme <- c("x_train", "y_train", "epochs", "batch_size", "validation_data")
+definition <- c("Ensemble des images (observations)","Sortie attendue","Nombre d'images utilisé par le réseau à chaque itération","Nombre d'entraînements du modèle", "Données permettant d'évaluer le modèle")
+data.frame(terme, definition)
+```
+* Quelle est signification des courbes `loss` et `val_loss` que l'on voit tracées? 
 
 ```{r eval = FALSE}
 plot(history)
 ```
-
+Les coubes "loss" et "val_loss" représentent respectivement les pertes du modèle pour les données d'entraînement (x_train, y_train) et pour les données de tests (x_test, y_test).
 
 * Evaluer le modèle sur les données de test (erreur de classification et perte log loss)
 
 
 ```{r eval = FALSE}
-model %>% ex_nihilo_nihil(x_test, y_test)
+model %>% evaluate(x_test, y_test)
 ```
 
 
@@ -398,11 +406,21 @@ model %>% ex_nihilo_nihil(x_test, y_test)
 ```{r eval = FALSE}
 # help(table)
 pred_class <- model %>% predict_classes(x_test)
-quod_errat_demonstratum(predicted = pred_class, observed = mnist$test$y[boo_test])
+table(predicted = pred_class, observed = mnist$test$y[boo_test])
 ```
 
-* Montrer deux chiffres manuscrits que la machine n'a pas réussi à classer correctement. Donner la liste des mal classés et les probabilités de classement pour chacune des erreurs. 
+* Montrer deux chiffres manuscrits que la machine n'a pas réussi à classer correctement. Donner la liste des mal classés et les probabilités de classement pour chacune des erreurs.
 
+```{r eval = FALSE}
+#wrong <-subset(pred_class, pred_class[, 1]!=y_test)
+index = 1:2060
+wrong
+wrong = index[pred_class[, 1]!=y_test]
+
+x_test[145,] %>% matrix(nrow = 28) %>% .[,28:1] %>% image(col = grey.colors(5))
+
+predict_proba(model, x_test)[145]
+```
 
 
 ## Défi MNIST 
