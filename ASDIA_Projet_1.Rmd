@@ -258,6 +258,7 @@ val_dropout<-c(0.2, 0.8)
 
 res_log_loss <- c()
 res_acc<-c()
+names<-c()
 
 
 create_model = function (nb_couches, nb_neurones, val_dropout){
@@ -304,17 +305,17 @@ for (i in 1:2){
                               validation_data = list(x_test, y_test))
       res <- c()
       res = model %>% evaluate(x_test, y_test)
-      res_log_loss[compteur] = res[1]
-      res_acc[compteur] = res[2]
+      res_log_loss[compteur] = res$loss
+      res_acc[compteur] = res$acc
+      names[compteur]=paste(c("modele", nb_couches[i], nb_neurones[j], val_dropout[k]*10), collapse = "_")
       compteur = compteur + 1
       }
   }
 }
 
-data.frame(res_log_loss, res_acc)
-
-
-
+data.frame(names, res_log_loss, res_acc)
+barplot(res_log_loss, legend.text = "Diagramme log_loss")
+barplot(res_acc, legend.text = "Diagramme des erreurs de classification")
   
 ```
 
