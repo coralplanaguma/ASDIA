@@ -20,20 +20,14 @@ $$
 \mathbb{E}[L(q({\bf x}), y )] \geq \mathbb{E}[L(q_{\rm opt}({\bf x}), y )] .
 $$
 
-*  **Conditionnement** : Montrer que pour minimiser l'espérance $\mathbb{E}[L(q({\bf x}), y )]$, il suffit de minimiser l'espérance conditionnelle $\mathbb{E}[L(q({\bf x}), y ) | {\bf x}]$ pour tout ${\bf x}$.
-
-
-*  **Entropie croisée** : On définit l'*entropie croisée* de deux lois de Bernoulli $p$ et $p^\prime$ (attribuant des valeurs à 0 ou 1 uniquement) de la manière suivante
+*  **Conditionnement** : 
 
 $$
-h(p,p^\prime) = - p(y = 0) \log p^\prime(y = 0) - p(y = 1) \log p^\prime(y = 1) .
+\mathbb{E}[L(q({\bf x}), y)]=\int\mathbb{E}[L(q({\bf x}), y)| x]p({\bf x})dx
 $$
-Démontrer que 
+Comme $p({\bf x }) \in [0, 1] (>0)$, pour minimiser l'espérance $\mathbb{E}[L(q({\bf x}), y )]$ il suffit de minimiser l'espérance conditionnelle $\mathbb{E}[L(q({\bf x}), y ) | {\bf x}]$ pour tout ${\bf x}$.
 
-$$
-h(p,p^\prime) = \mathbb{KL}(p \| p^\prime) + h(p)  \geq h(p) \, , 
-$$
-où $\mathbb{KL}(p \| p^\prime)$ est la divergence Kullback-Leibler et $h(p)$ l'entropie de $p$.
+*  **Entropie croisée** :
 
 $$
 \begin{align}
@@ -43,7 +37,10 @@ $$
 \end{align}
 $$
 
-Comme la divergence de Kulback-Leibler est positive, on obtient bien l'inégalité attendue.
+Comme la divergence de Kulback-Leibler est positive, on obtient bien l'inégalité suivante : 
+$$
+h(p, p') \geq h(p)
+$$
 
 
 * **Entropie croisée et log-loss ** : On appelle $q_{.}({\bf x})$ la loi de Bernoulli de paramètre $q({\bf x})$. Démontrer que 
