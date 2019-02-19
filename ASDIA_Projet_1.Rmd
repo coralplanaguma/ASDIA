@@ -140,7 +140,6 @@ Démontrer que le minimum de la fonction de perte correspond au maximum de la vr
 * Commenter et compléter le code suivant.  
 
 ```{r eval = FALSE}
-# commenter les lignes suivantes
   model <- keras_model_sequential() 
   model %>% 
     # Initialisation de la première couche avec fonctoin d'activation "relu" et 256 neurones.
@@ -167,7 +166,7 @@ data.frame(terme, definition)
 
 
 ```{r eval = FALSE}
-# commenter et compléter les lignes suivantes  
+# Configuration du modèle pour l'entraînement  
   model %>% compile(
     loss = 'binary_crossentropy',
     optimizer = optimizer_rmsprop(lr = 0.001, rho = 0.9, decay = 0),
@@ -188,6 +187,7 @@ data.frame(terme, definition)
 * Allons-y Alonso, pour ajuster le réseau (apprentissage)
 
 ```{r, eval = FALSE}
+# A pprentissage : on entraîne le modèle
   history <- model %>% fit(
                         x_train, 
                         y_train, 
@@ -229,13 +229,16 @@ table(predicted = pred_class, observed = mnist$test$y[boo_test])
 * Montrer deux chiffres manuscrits que la machine n'a pas réussi à classer correctement. Donner la liste des mal classés et les probabilités de classement pour chacune des erreurs.
 
 ```{r eval = FALSE}
-#wrong <-subset(pred_class, pred_class[, 1]!=y_test)
 index = 1:2060
 wrong = index[pred_class[, 1]!=y_test]
 
 x_test[145,] %>% matrix(nrow = 28) %>% .[,28:1] %>% image(col = grey.colors(5))
+x_test[223,] %>% matrix(nrow = 28) %>% .[,28:1] %>% image(col = grey.colors(5))
+
 
 predict_proba(model, x_test)[145]
+predict_proba(model, x_test)[223]
+
 ```
 
 
@@ -247,6 +250,73 @@ Pour les données de l'exercice précédent, répondre aux questions suivantes.
   - nombre de couches cachées : 1 ou 5, 
   - nombre de neurones par couche cachée : 10 ou 100, 
   - valeur de `dropout` par couche cachée : 0.2 ou 0.8.
+  
+```{r}
+nb_couches <-c(1, 5)
+nb_neurones<-c(10, 100)
+val_dropout<-c(0.2, 0.8)
+
+res_log_loss <- c()
+res_acc<-c()
+
+
+create_model = function (nb_couches, nb_neurones, val_dropout){
+  #Renvoie un modèle correspondant aux critères entrés en paramètres
+  model <- keras_model_sequential()
+  model %>% 
+    # Initialisation de la première couche avec fonction d'activation "relu" et 256 neurones.
+    layer_dense(units = nb_neurones, activation = 'relu', input_shape = 784) %>% 
+    layer_dropout(rate = val_dropout)
+  if(nb_couches != 1){
+    for (i in 1:nb_couches-1){
+      model %>% 
+      # Initialisation des couches suivantes
+      layer_dense(units = nb_neurones, activation = 'relu') %>% 
+      layer_dropout(rate = val_dropout)
+    }
+  }
+  model %>% 
+  # Initialisation de dernière couche
+  layer_dense(units = 1, activation = 'sigmoid')
+  return (model);
+}
+
+compteur = 1
+for (i in 1:2){
+  for (j in 1:2){
+    for(k in 1:2){
+      model1<-create_model(nb_couches[i], nb_neurones[j], val_dropout[k])
+
+      # Configuration du modèle pour l'apprentissage
+      model1 %>% compile(
+          loss = 'binary_crossentropy',
+          optimizer = optimizer_rmsprop(lr = 0.001, rho = 0.9, decay = 0),
+          metrics = c('accuracy')
+      )
+      
+      
+      # Entraînement du réseau
+      history <- model %>% fit(
+                              x_train, 
+                              y_train, 
+                              epochs = 20, 
+                              batch_size = 128, 
+                              validation_data = list(x_test, y_test))
+      res <- c()
+      res = model %>% evaluate(x_test, y_test)
+      res_log_loss[compteur] = res[1]
+      res_acc[compteur] = res[2]
+      compteur = compteur + 1
+      }
+  }
+}
+
+data.frame(res_log_loss, res_acc)
+
+
+
+  
+```
 
 Inclure dans tableau une colonne indiquant le nom de chaque modele. Par exemple, un modèle à 5 couches cachées, 10 neurones par couche et une valeur "dropout" de 0.2 pourra s'appeler "modele_5_10_2"
 
