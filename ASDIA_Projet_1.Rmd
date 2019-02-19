@@ -1,56 +1,13 @@
 ---
 title: "ASDIA Projet 1"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 
 
-# Préliminaires
-
-
 # Partie 1 : Apprentissage supervisé pour la classification 
-
-## Objectifs de l'apprentissage supervisé 
-
-On suppose qu'une catégorie binaire, $y \in \{0,1\}$, est associée un vecteur d'observations multidimensionelles, notées ${\bf x} \in \mathbb{R}^D$. Par exemple, ${\bf x}$ peut représenter un image, un texte, un fichier audio, etc. La classification peut indiquer la présence d'un animal domestique (chat vs chien), une appréciation subjective (sentiment positif ou négatif), un style musical (rock ou pop), etc. Dans tous ces exemples, on aura spécifié la representation vectorielle des observations d'une manière ou d'une autre, par une méthode d'encodage spécifique à l'application considérée. 
-
-L'objectif de l'apprentissage supervisé est de construire un modèle de prédiction probabiliste, $q({\bf x}, \theta) \in [0,1]$, évaluant, pour tout ${\bf x}$, la probabilité pour que l'observation ${\bf x}$ provienne de la catégorie 1. Pour cela, la méthode adoptée consiste à minimiser une fonction de perte moyenne
-
-$$
-  L(\theta) = \mathbb{E}[L(q({\bf x}, \theta), y)] \, .
-$$
-
-Les coefficients du modèle, $\theta$, sont appelés *paramètres* ou *poids*. Le problème se résume à minimiser la fonction de perte moyenne exprimée en fonction de $\theta$, c'est à dire calculer les coefficients suivants
-
-$$
-\hat \theta = \arg\min_{\theta} L(\theta) \, .
-$$
-
-D'autres coefficients que les paramètres du modèle peuvent aussi entrer en compte dans le processus de minimisation. Ces coefficients supplémentaires sont appelés les *hyperparamètres*. Ils peuvent représenter le nombre d'itérations de l'algorithme de minimisation, la dimension ou la complexité du modèle (nombre de neurones ou de couches de neurones par exemple), des paramètres de régularisation, la condition initiale de l'algorithme de minimisation (seed du générateur), la méthode numérique choisie pour réaliser la minimisation de $L(\theta)$, etc. 
-
-La valeur théorique de l'espérance étant difficile à calculer, la perte moyenne est généralement évaluée à partir d'un échantillon de données d'apprentissage $({\bf x}_i, y_i)$, $i = 1, \dots, n$. Cet ensemble de données est généralement de grande taille et il permet (sous des hypothèses raisonnable) d'approcher la valeur moyenne de la fonction de perte de la manière suivante
-
-$$
-   L(\theta) \approx \frac1n \sum_{i = 1}^n L(q({\bf x}_i, \theta), y_i) \, .
-$$
-
-La fonction de perte empirique définie ci-dessus est alors utilisée pour calculer $\hat \theta$. Un ensemble de test est généralement utilisé pour évaluer les performances prédictives du modèle et choisir un ensemble d'hyperparamètres conduisant à des performances satisfaisantes.
-
-## Perte log-loss (entropie croisée)
-
-La fonction de perte _log-loss_  est très fréquemment considérée par les algorithmes d'apprentissage probabiliste. Elle est définie de la manière suivante  
-
-$$
-L(q({\bf x}), y) = - y \log q({\bf x}) - (1-y)\log (1 - q({\bf x})) \, ,
-$$
-où $q({\bf x})$ est identifiée à la probabilité d'observer la classe 1 sachant ${\bf x}$, $q({\bf x}) = q_1({\bf x})$.
-
-La perte moyenne associée à la fonction de perte **log-loss** est égale à
-
-$$
-\mathbb{E}[L(q({\bf x}), y )] =  \int \mathbb{E}[L(q({\bf x}), y) | {\bf x}] p({\bf x}) d{\bf x} \, .
-$$
-En termes de théorie de l'information, minimiser la perte log-loss moyenne revient à minimiser l'information perdue lorsque l'on approche la probabilité cible $p(y = 1|{\bf x})$ par un prédicteur probabiliste donné, $q({\bf x})$. 
 
 L'objet de cette partie est de démontrer le résultat suivant.
 
@@ -110,146 +67,9 @@ $$
 Démontrer que le minimum de la fonction de perte correspond au maximum de la vraisemblance pour ce modèle. 
 
 
-
-## Réseaux de neurones
-
-
-### Neurone probabiliste
-
-Soit ${\bf x} \in \mathbb{R}^D$. On appelle _neurone probabiliste_ un prédicteur probabiliste de la forme suivante
-
-$$
- q({\bf x}, \theta) =  \sigma( {\bf w}^T {\bf x}  - b ) \, , \quad  {\bf x} \in \mathbb{R}^D,
-$$
-où la fonction sigmoide ($\sigma$) est définie par 
-
-$$
-\sigma(x) = \frac{1}{1 + e^{-x}}\, , \quad  x \in \mathbb{R},
-$$
-et le paramètre $\theta$ possède $(D+1)$ coefficients
-
-$$
-\theta = (b, {\bf w}).
-$$
-
-Le vecteur de coefficients ${\bf w}$ est de dimension $D$ et $b$ est un scalaire représentant un seuil. 
-
-La motivation initiale d'un modèle neuronal est d'imiter un neurone biologique. En effet, les variables ${\bf x}$ représentent des stimuli externes, les coefficients ${\bf w}$ représentent des poids synaptiques, et la fonction "sigmoide" correspond à la fonction d'activation d'un neurone biologique. Le neurone emet un potentiel d'action avec une probabilité d'autant plus grande que la somme pondérée des stimuli est grande. 
-
-La notation peut être simplifiée en ajoutant une variable d'entrée $x_{0}$ fixée de manière constante à la valeur $-1$ ($x_{0} = -1$). Dans ce cas, nous pouvons augmenter la dimension du vecteur ${\bf w}$ à $D+1$, et prendre $w_0 = b$. La fonction de decision neuronale est alors décrite par la formule suivante
-
-$$
- q({\bf x}, {\bf w}) =  \sigma( {\bf w}^T {\bf x} ) \, , \quad  {\bf x} \in \mathbb{R}^D.
-$$
-Dans cette notation (abusive), nous n'avons pas augmenté la dimension de ${\bf x}$ à $D+1$ pour bien mettre en évidence que l'espace des observation est resté identique.
-
-Notons que la fonction sigmoide n'est pas la seule fonction d'activation proposée dans les réseaux neuronaux. La fonction _rectified linear unit_ (_relu_) est souvent utilisée  dans les couches cachées pour son efficacité numérique. La fonction _relu_ est définie par
-
-$$
-{\rm relu}(x) = \max(0, x) , \, \quad x \in \mathbb{R}.
-$$
-
-Elle est parfois remplacée par la fonction _softplus_ définie de la manière suivante
-
-$$
-{\rm softplus}(x) = \log(1 + e^{x}), \, \quad x \in \mathbb{R}.
-$$
-Lorsque l'on encode les variables de classes $y$ en variables catégorielles, $y = 1$ est codé par (0,1) et $y = 0$ est codé par $(1,0)$ on remplace la fonction sigmoide par la fonction softmax. Cette dernière peut être généralisée à plusieurs catégories. Cela a un intêret s'il y a plus de deux catégories.  
-
-
-
-### Réseau de neurones probabilistes
-
-L'intelligence artificielle propose d'approcher le prédicteur optimal par des combinaisons de fonctions neuronales agencées en couches successives, comme dans le cerveau humain. L'idée n'est pas d'utiliser une base fonctionnelle particulière mais d'apprendre une base adaptable au problème considéré, afin d'utiliser les meilleures représentations des variables observées dans chaque problème particulier.
-
-Par exemple, un réseau de neurones possédant une couche cachée s'écrit de la manière suivante
-
-$$
- q({\bf x}, {\bf \theta}) = \sigma({\bf W_0}^T \, \sigma({\bf W_1}^T{\bf x}) ) \, .
-$$
-
-où le paramètre global, $\theta$, inclut les seuils d'activation et les coefficients synaptiques. Il correspond à la formule suivante
-$$
-\theta = ({\bf W_0}, {\bf W_1}).
-$$
-
-Les notations ${\bf W_0}^T$ et ${\bf W_1}^T$ désignent désormais des matrices de dimensions respectives  $(L\times 1 + 1)$ et $(D \times L + L)$ et la fonction _sigmoide_ est appliquée à chaque coordonnée des vecteurs. Le paramètre $L$ correspond au nombre de neurones dans la couche cachée.  Le paramètre global $\theta$ est donc de dimension $(D + 2)L + 1$. Ainsi, pour deux dimensions ($D =2$) et 20 neurones, nous aurons 81 paramètres distincts dans le modèle. 
-
-La formule peut se généraliser à l'utilisation de plusieurs couches de neurones. On parle alors de réseaux multi-couches. On qualifie les réseaux multi-couches de _réseaux profonds_ à partir d'une douzaine de couches (hum deux selon certains auteurs).  Par exemple, un réseau de neurones possédant 3 couches cachées s'écrit
-
-$$
- q({\bf x}, {\bf \theta}) = \sigma( {\bf W_0}^T \sigma({\bf W_1}^T \sigma({\bf W_2}^T \sigma({\bf W_3}^T{\bf x})))) \, , \quad {\bf x} \in \mathbb{R}^D.
-$$
-![Un réseau de neurones artificiels. Le réseau prend une variable de dimension 3 en entrée et la classe en deux catégories (softmax) en sortie. Il y a une couche cachée possédant 4 neurones.]
-<!--(./Artificial_neural_network.svg.png)-->
-
-### Gradient stochastique
-
-L'apprentissage, c'est à dire la minimisation effective de la fonction de perte $L(\theta)$, est généralement réalisé par une méthode d'optimisation numérique. Il existe de nombreuses méthodes d'optimisation numérique permettant de trouver un minimum local de la fonction $L(\theta)$. 
-
-La méthode de prédilection des réseaux de neurones est la méthode du gradient. Il s'agit d'une méthode de minimisation locale. La méthode du gradient repose sur le calcul des dérivées partielles de la fonction $L(\theta)$
-
-$$
-\nabla L = \left( \frac{\partial L}{\partial \theta_1} , \dots, \frac{\partial L}{\partial \theta_m} \right)^T \,.
-$$
-
-D'après la formule de Taylor (ou d'après la définition de l'application différentielle), la fonction $L(\theta)$ peut être développée localement de la manière suivante
-
-$$
-L(\theta + d\theta) = L(\theta) + {\bf \nabla} L(\theta)^T d\theta + o(d\theta) \, .
-$$
-Ainsi, les déplacements $d\theta$ conduisant aux plus grandes variations de la fonction $L(\theta)$ au voisinage de $\theta$ s'effectuent dans une direction parallèle au vecteur $\nabla L(\theta)$.  
-
-La méthode de gradient est une méthode rudimentaire cherchant à suivre la ligne de plus grande pente afin de minimiser la fonction de perte, $L(\theta)$. Il s'agit d'une méthode itérative qui met à jour le paramètre $\theta$ de la manière suivante 
-
-$$
-\theta^{t+1} = \theta^t - \eta \nabla L(\theta^t) \, .
-$$
-
-La constante $\eta$ est petite et elle est appelée _taux d'apprentissage_ (learning rate). Lors d'une mise à jour de l'algorithme, la valeur de la fonction $L$ a ainsi tendance à décroitre
-
-$$
-L(\theta^{t+1}) - L(\theta^t) \approx - \eta \| {\bf \nabla} L(\theta^t) \|_2^2 \,  < 0 \,,
-$$
-et $\theta^t$ converge vers un minimum local, un point selle ou un plateau de $L(\theta)$.
-
-Cette méthode peut être raffinée en utilisant les dérivées secondes de la fonction $L(\theta)$. Ceci est pertinent lorsque le paramètre $\theta$ est de dimension raisonnable, de l'ordre de quelques dizaines de coefficients. En grande dimension, la méthode du du gradient reste la méthode favorite dans les implémentations logicielles des réseaux neuronaux.
-
-Les méthodes de _gradient stochastique_ sont utilisées en très grande dimension. Elles implémentent l'algorithme suivant
-
-1. Choisir une valeur initiale $\theta$ et une valeur du taux d'apprentissage  $\eta$.
-2. Répéter les étapes suivantes jusqu'à ce qu'un minimum acceptable soit atteint
-- permuter aléatoirement les éléments de l'échantillon d'apprentissage
-- pour tout $i$ de 1 à $n$, mettre à jour les paramètres de la manière suivante
-$$
-\theta^{t+1} = \theta^{t} - \eta_t  \nabla L(q({\bf x}_i , \theta^t), y_i) 
-$$
-Un tel cycle aléatoire s'appelle une _époque_. 
-
-
-
-La phase d'initialisation est une phase cruciale dans les applications. Pour la reconnaissance des images, de nombreux réseaux de neurones pré-entrainés existent et atteignent d'excellentes performances de classification une base de données publiques appelée "Imagenet". Les logiciels actuels permettent de récupérer les matrices de coefficients de réseaux pré-entrainés, simplifiant considérablement la phase d'initialisation d'un réseau de neurones destiné à reconnaître des images particulières, proche de celles annotées dans la base. On peut, en quelques heures, entraîner un réseau de neurones à reconnaître des animaux domestiques à partir de quelques milliers d'images. Construire et entraîner un tel réseau sans cette condition initiale peut nécessiter des ressources considérables.       
-
-Plutôt que de parcourir les données de l'échantillon les unes après les autres (point 2 de l'algorithme), un compromis entre l'algorithme de gradient et l'algorithme de gradient stochastique consiste à considérer des paquets ("batch") de données lors de la mise à jour des paramètres. Cette technique est plus rapide mais un peu moins précise que le gradient stochastique. La taille du batch devient un hyperparamètre supplémentaire sur lequel agir lors de la phase d'apprentissage.   
-
-L'algorithme de gradient stochastique s'accompagne de conditions concernant le taux d'apprentissage. Ce paramètre  de l'algorithme peut décroître avec le temps. Une condition classique consiste à choisir $\eta_t$ tel que
-$$
-\sum_{t=1}^\infty \eta_t = \infty \quad {\rm et } \quad \sum_{t=1}^\infty \eta_t^2 < \infty.
-$$
-De nombreuses variantes d'algorithmes d'optimisation sont disponibles dans les programmes de réseaux de neurones. Il est souvent utile de pouvoir en tester plusieurs.
-
-
-
-# Partie 2 : Reconnaissance de chiffres manuscrits
-
-
-Dans cet exercice, nous déterminerons les capacités des réseaux de neurones de la bibliothèque _Tensorflow_ à correctement reconnaître des chiffres écrits à la main. La reconnaissance de l'écriture manuscrite est un problème difficile, et constitue un test pour les algorithmes d'apprentissage. Cet exemple est historique pour les réseaux de neurones et largement traité sur internet (il vous sera donc facile de savoir si vous faites bien).
-
-Les données de caractères manuscrits sont issues de la base  [MNIST](https://fr.wikipedia.org/wiki/Base_de_donn%C3%A9es_MNIST) (Modified National Institute of Standards and Technology). La base de données MNIST est une base de données de chiffres écrits à la main. Elle regroupe 60000 images de chiffres manuscrits et 10000 images de test. Ce sont des matrices carrées ayant 28 pixels de côté, dont les valeurs sont des niveaux de gris allant de 0 à 255.
+# Partie 2 : Reconnaissance de chiffres manuscrits (2 et 7)
 
 ## Lecture des données
-
-Les données sont accessibles depuis la librairie R `keras` qui les télécharge directement depuis l'url de dépot (il faut donc être connecté à internet pour réaliser le TP).  Chaque donnée est représentée par un tableau 3d (`array`) contenant les informations (images, width, height) en niveaux de gris. Pour coder le vecteur ${\bf x}$, nous aurons besoin de vectoriser ces données. Pour ne pas se limiter aux tutoriaux disponibles sur le web, nous nous intéressons à la reconnaissance des chiffres $2$ et $7$. 
 
 * Lire les données MNIST. Il y a 4 ensembles de variables. 
 ```{r}
@@ -414,7 +234,6 @@ table(predicted = pred_class, observed = mnist$test$y[boo_test])
 ```{r eval = FALSE}
 #wrong <-subset(pred_class, pred_class[, 1]!=y_test)
 index = 1:2060
-wrong
 wrong = index[pred_class[, 1]!=y_test]
 
 x_test[145,] %>% matrix(nrow = 28) %>% .[,28:1] %>% image(col = grey.colors(5))
