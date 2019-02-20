@@ -603,12 +603,7 @@ barplot(sort(freq, decreasing = TRUE), col = "palegreen", las = 2)
 
 #### Modèles d'apprentissage 
 
-
-* \`A l'aide des outils de _keras_, ajuster des modèles d'apprentissage aux données contenues dans le défi : "x_imbd" et "y_imbd". Considérer la graine du générateur aléatoire `seed` comme un hyper-paramètre (`set.seed(seed)`).
-
-* Dans un tableau, décrire les performances de 6 méthodes choisies pour des échantillons d'apprentissage et de test que vous aurez créés vous-mêmes à partir des données "x_imbd" et "y_imbd". Les performances seront mesurées par les erreurs de classification et d'entropie croisée (log loss).
-
-* Donner le code R correspondant au meilleur modèle que vous avez ajusté (chunk ci-dessous). On considèrera la graine du générateur aléatoire comme un hyperparamètre supplémentaire du modèle. Donner la valeur finale d'entropie croisée estimée sur votre ensemble test. On fera en sorte que le résulat soit complètement reproductible à partir du code proposé. 
+Voici le code R correspondant au modèle qu'on a choisi: ss
 
 
 ```{r}
@@ -619,8 +614,8 @@ y_train <- y[1:5000]
 y_test <- y[5001:10000]
 
 val_dropout = 0.5
-nb_neurones = 15
-nb_couches = 2
+nb_neurones = 10
+nb_couches = 10
 # code de mon meilleur modèle
 model<-keras_model_sequential()
 
@@ -644,7 +639,7 @@ layer_dense(units = 1, activation = 'sigmoid')
 # Configuration du modèle pour l'apprentissage
 model %>% compile(
           loss = 'binary_crossentropy',
-          optimizer = 'adam',
+          optimizer = optimizer_rmsprop(lr = 0.001, rho = 0.9, decay = 0),
           metrics = c('accuracy')
       )
 
@@ -653,18 +648,31 @@ history <- model %>% fit(
                           x_train, 
                           y_train, 
                           epochs = 20, 
-                          batch_size = 128, 
+                          batch_size = 500, 
                           validation_data = list(x_test, y_test))
 
 # Evaluation du modèle
 model %>% evaluate(x_test, y_test)
-
-
 ```
 
 
 
+```{r}
+dropout_val <- c(0.2, 0.4, 0.4, 0.5, 0.5 , 0.5)
+nb_neurone<-c(100, 10, 4, 10, 1000, 1000)
+nb_couche <-c(3, 5, 10, 10, 1000, 1000)
+optimizer_type <-c("rmsprop", "adam", "rmsprop", "rmsprop", "rmsprop", "rmsprop")
+nb_epochs <-c(20, 20, 200, 20, 25, 30)
+logloss_val <-c(1.1, 0.52, 1.43, 0.337, 0.352, 0.362)
+accuracy_val<-c(0.84, 0.86, 0.81, 0.86, 0.86, 0.86)
+batchsize <-c(128, 128, 128, 500, 4000, 4000)
+data.frame(optimizer_type, dropout_val, nb_neurone, nb_couche, nb_epochs, batchsize, logloss_val, accuracy_val)
+```
 
 
+Ainsi après plusieurs jours d'experiences, nos scientifiques ont décidé de garder la combinaison suivante: 
 
+| Drouptout    |   optimizer   |    neurones    |     couches | epochs |  batch size | 
+|------------ |:--------------:|---------------|:------------:| ------:| -----------:|
+|0.5          | rmsprop        |    10          |        10   |  20    |   500       |
 
