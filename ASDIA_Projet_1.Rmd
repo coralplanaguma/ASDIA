@@ -81,6 +81,7 @@ Démontrer que le minimum de la fonction de perte correspond au maximum de la vr
 
 * Filtrer les données correspondant aux chiffres $2$ et $7$. Commenter et compléter le code suivant. Exécuter le code en changeant l'option de chunck. 
 
+<<<<<<< HEAD
 ```{r}
 # On conserve les 2 et les 7 uniquement
   boo_train <- y_train == 2 | y_train == 7 
@@ -139,7 +140,7 @@ Démontrer que le minimum de la fonction de perte correspond au maximum de la vr
 
 * Commenter et compléter le code suivant.  
 
-```{r eval = FALSE}
+```{r}
   model <- keras_model_sequential() 
   model %>% 
     # Initialisation de la première couche avec fonctoin d'activation "relu" et 256 neurones.
@@ -165,7 +166,7 @@ data.frame(terme, definition)
 * Compiler le modèle en précisant la fonction de perte (binary) et demander de visualiser le taux de bonne classification (accuracy). Le choix de l'optimiseur est spécifié. 
 
 
-```{r eval = FALSE}
+```{r}
 # Configuration du modèle pour l'entraînement  
   model %>% compile(
     loss = 'binary_crossentropy',
@@ -186,7 +187,7 @@ data.frame(terme, definition)
 
 * Allons-y Alonso, pour ajuster le réseau (apprentissage)
 
-```{r, eval = FALSE}
+```{r}
 # A pprentissage : on entraîne le modèle
   history <- model %>% fit(
                         x_train, 
@@ -205,7 +206,7 @@ data.frame(terme, definition)
 ```
 * Quelle est signification des courbes `loss` et `val_loss` que l'on voit tracées? 
 
-```{r eval = FALSE}
+```{r}
 plot(history)
 ```
 Les coubes "loss" et "val_loss" représentent respectivement les pertes du modèle pour les données d'entraînement (x_train, y_train) et pour les données de tests (x_test, y_test).
@@ -213,14 +214,14 @@ Les coubes "loss" et "val_loss" représentent respectivement les pertes du modè
 * Evaluer le modèle sur les données de test (erreur de classification et perte log loss)
 
 
-```{r eval = FALSE}
+```{r}
 model %>% evaluate(x_test, y_test)
 ```
 
 
 * Donner une matrice de confusion pour les classements effectués par le modèle sur le jeu test
 
-```{r eval = FALSE}
+```{r}
 # help(table)
 pred_class <- model %>% predict_classes(x_test)
 table(predicted = pred_class, observed = mnist$test$y[boo_test])
@@ -228,7 +229,7 @@ table(predicted = pred_class, observed = mnist$test$y[boo_test])
 
 * Montrer deux chiffres manuscrits que la machine n'a pas réussi à classer correctement. Donner la liste des mal classés et les probabilités de classement pour chacune des erreurs.
 
-```{r eval = FALSE}
+```{r}
 index = 1:2060
 wrong = index[pred_class[, 1]!=y_test]
 
@@ -257,69 +258,88 @@ nb_couches <-c(1, 5)
 nb_neurones<-c(10, 100)
 val_dropout<-c(0.2, 0.8)
 
-res_log_loss <- c()
-res_acc<-c()
-names<-c()
 
 
 create_model = function (nb_couches, nb_neurones, val_dropout){
   #Renvoie un modèle correspondant aux critères entrés en paramètres
-  model <- keras_model_sequential()
-  model %>% 
+  wanted_model <- keras_model_sequential()
+  wanted_model %>% 
     # Initialisation de la première couche avec fonction d'activation "relu" et 256 neurones.
     layer_dense(units = nb_neurones, activation = 'relu', input_shape = 784) %>% 
     layer_dropout(rate = val_dropout)
   if(nb_couches != 1){
-    for (i in 1:nb_couches-1){
-      model %>% 
+    for (i in 1:nb_couches){
+      wanted_model %>% 
       # Initialisation des couches suivantes
       layer_dense(units = nb_neurones, activation = 'relu') %>% 
       layer_dropout(rate = val_dropout)
     }
   }
-  model %>% 
+  wanted_model %>% 
   # Initialisation de dernière couche
   layer_dense(units = 1, activation = 'sigmoid')
-  return (model);
+  return (wanted_model);
 }
 
-list_model<-c()
-compteur = 1
-for (i in 1:2){
-  for (j in 1:2){
-    for(k in 1:2){
 
-      created_model<-create_model(nb_couches[i], nb_neurones[j], val_dropout[k])
-      model = created_model
+modele_1_10_2 <- create_model(1, 10, 2)
+modele_1_10_8 <- create_model(1, 10, 8)
+modele_1_100_2 <- create_model(1, 100, 2)
+modele_1_100_8 <- create_model(1, 100, 8)
+modele_5_10_2 <-  create_model(5, 10, 2)
+modele_5_10_8 <-  create_model(5, 10, 8)
+modele_5_100_2 <-  create_model(5,100, 2)
+modele_5_100_8 <- create_model(5, 100, 8)
+
+res_log_loss<-c()
+res_acc<-c()
+compteur = 1
+
+model_instructions = function(model1){
+
       # Configuration du modèle pour l'apprentissage
-      model %>% compile(
+      model1 %>% compile(
           loss = 'binary_crossentropy',
           optimizer = optimizer_rmsprop(lr = 0.001, rho = 0.9, decay = 0),
           metrics = c('accuracy')
       )
       
-      
       # Entraînement du réseau
-      history <- model %>% fit(
+      history <- model1 %>% fit(
                               x_train, 
                               y_train, 
                               epochs = 20, 
                               batch_size = 128, 
                               validation_data = list(x_test, y_test))
+      
       res <- c()
-      res = model %>% evaluate(x_test, y_test)
-      res_log_loss[compteur] = res$loss
-      res_acc[compteur] = res$acc
-      names[compteur]=paste(c("modele", nb_couches[i], nb_neurones[j], val_dropout[k]*10), collapse = "_")
-      compteur = compteur + 1
-      }
-  }
+      res = model1 %>% evaluate(x_test, y_test)
+      return(res)
+
 }
 
+res_log_loss[1] = model_instructions(modele_1_10_2)$loss
+res_log_loss[2] = model_instructions(modele_1_10_8)$loss
+res_log_loss[3] = model_instructions(modele_1_100_2)$loss
+res_log_loss[4] = model_instructions(modele_1_100_8)$loss
+res_log_loss[5] = model_instructions(modele_5_10_2)$loss
+res_log_loss[6] = model_instructions(modele_5_10_8)$loss
+res_log_loss[7] = model_instructions(modele_5_100_2)$loss
+res_log_loss[8] = model_instructions(modele_5_100_8)$loss
+  
+res_acc[1] = model_instructions(modele_1_10_2)$acc
+res_acc[2] = model_instructions(modele_1_10_8)$acc
+res_acc[3] = model_instructions(modele_1_100_2)$acc
+res_acc[4] = model_instructions(modele_1_100_8)$acc
+res_acc[5] = model_instructions(modele_5_10_2)$acc
+res_acc[6] = model_instructions(modele_5_10_8)$acc
+res_acc[7] = model_instructions(modele_5_100_2)$acc
+res_acc[8] = model_instructions(modele_5_100_8)$acc
+
+names<-c("modele_1_10_2", "modele_1_10_8", "modele_1_100_2", "modele_1_100_8", "modele_5_10_2", "modele_5_10_8", "modele_5_100_2","modele_5_100_8")
 data <- data.frame(names, res_log_loss, res_acc)
 barplot(res_log_loss, main = "Comparaison des erreurs de logloss", ylab = "logloss", legend.text = data$names, col = rainbow((8)))
 barplot(res_acc, main = "Comparaison des erreurs de classification", ylab = "accuracy", ylim = c(0.96, 0.99), legend.text = data$names, args.legend = list(x = "bottomleft"), col = rainbow(8))
-  
 ```
 
 
@@ -329,13 +349,12 @@ Afin de faire notre choix, on essaie de trouver un modèle qui maximise l'accura
 
 * Donner la liste des chiffres mal classés et les probabilités de classement pour chacune des erreurs. 
 ```{r}
-
 probas<-c()
 
-pred_class <- model %>% predict_classes(x_test)
+pred_class <- model_1_100_2 %>% predict_classes(x_test)
 wrong = index[pred_class[, 1]!=y_test]
 for (i in 0:length(wrong)){
-  probas[i] = predict_proba(model, x_test)[wrong[i]]
+  probas[i] = predict_proba(model_1_100_2, x_test)[wrong[i]]
 }
 data.frame(wrong, probas)
 ```
