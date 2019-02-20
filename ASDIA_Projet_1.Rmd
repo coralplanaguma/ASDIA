@@ -48,16 +48,19 @@ $$
 $$
 \mathbb{E}[L(q({\bf x}), y ) | {\bf x}]  = h(p_{\sf Y}(.|{\bf x}), q_{.}({\bf x}))  .  
 $$
+
 Démonstration:
+
 $$
 \begin{align}
-  \mathbb{E}[L(q({\bf x}, y)|{\bf x})] &= \mathbb{E}[-y \log q({\bf x}) - (1-y)\log (1-q({\bf x}))|x]\\
+  \mathbb{E}[L(q({\bf x}, y)|{\bf x})] &= \mathbb{E}[-y \log q({\bf x}) - (1-y)\log (1-q({\bf x}))|{\bf x}]\\
   &= -\log q({\bf x}) \mathbb{E[y]}-\log(1-q({\bf x}))(1 - \mathbb{E}[y])\\
   &=-p(y=1|{\bf x}) \log q({\bf x}) - (1 - p(y=1|{\bf x}))\log (1-q({\bf x}))\\
-  &= -p(y=0|{\bf x}) \log (1-q({\bf x})) - p(y=1)\log (q({\bf x}))\\
+  &= -p(y=0|{\bf x}) \log (1-q({\bf x})) - p(y=1|{\bf x})\log (q({\bf x}))\\
   &= h(p_Y(.|{\bf x}), q_.({\bf x}))
 \end{align}
 $$
+
 
 * Démontrer le théorème. 
 
