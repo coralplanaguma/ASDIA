@@ -81,7 +81,7 @@ Démontrer que le minimum de la fonction de perte correspond au maximum de la vr
 
 * Filtrer les données correspondant aux chiffres $2$ et $7$. Commenter et compléter le code suivant. Exécuter le code en changeant l'option de chunck. 
 
-<<<<<<< HEAD
+
 ```{r}
 # On conserve les 2 et les 7 uniquement
   boo_train <- y_train == 2 | y_train == 7 
@@ -246,8 +246,9 @@ predict_proba(model, x_test)[223]
 ## Défi MNIST 
 
 Pour les données de l'exercice précédent, répondre aux questions suivantes.
-
-* Reporter dans un tableau 6x2 (`data.frame`), puis dans deux diagrammes en barres (`barplot`), les valeurs des erreurs de classification et de _logloss_ obtenues sur l'ensemble test pour 6 réseaux de neurones distincts dont on aura fait varier les paramètres de la manière suivante 
+  
+  
+  Construisons 6 modèles dont nous feons varier les paramètres de la anière suivante:
   - nombre de couches cachées : 1 ou 5, 
   - nombre de neurones par couche cachée : 10 ou 100, 
   - valeur de `dropout` par couche cachée : 0.2 ou 0.8.
@@ -350,11 +351,10 @@ Afin de faire notre choix, on essaie de trouver un modèle qui maximise l'accura
 * Donner la liste des chiffres mal classés et les probabilités de classement pour chacune des erreurs. 
 ```{r}
 probas<-c()
-
-pred_class <- model_1_100_2 %>% predict_classes(x_test)
+pred_class <- modele_1_100_2 %>% predict_classes(x_test)
 wrong = index[pred_class[, 1]!=y_test]
 for (i in 0:length(wrong)){
-  probas[i] = predict_proba(model_1_100_2, x_test)[wrong[i]]
+  probas[i] = predict_proba(modele_1_100_2, x_test)[wrong[i]]
 }
 data.frame(wrong, probas)
 ```
@@ -407,7 +407,7 @@ Pour réduire le temps de calcul, nous conservons uniquement les 5000 termes les
 * Ecrire une ligne de commande R permettant convertir le document 12 en un vecteur de longueur 5000, indiquant le nombre d'apparition de chacun des indices allant de 1 à 5000 dans ce document.  
 
 
-```{r eval = FALSE}
+```{r}
   # Conversion du document 12 en un vecteur de longueur 5000
   help(sapply)
   doc <- imbd$train$x[[12]]
@@ -418,7 +418,7 @@ Pour réduire le temps de calcul, nous conservons uniquement les 5000 termes les
 * Constituer un jeu de données comportant 10000 documents choisis pour moitié dans l'ensemble "train" et pour moitié dans l'ensemble "test" de l'IMBD. Techniquement nous le constituerons en 20 étapes, pour limiter l'impact sur la mémoire. Commenter et exécuter le code suivant
 
 
-```{r eval = FALSE}
+```{r}
 x_imbd <- NULL
 
   for (i in 1:10){
@@ -469,7 +469,7 @@ data.frame(classe, definition)
 ```
 
 
-```{r eval = FALSE}
+```{r}
 # Récupération de s valeurs y associées aux fichiers sélectionnés                                           
   y_imbd <- c(imbd$train$y[1:5000], imbd$test$y[1:5000])
 ```
@@ -483,7 +483,7 @@ Le but d'une étude d'association est d'identifier les termes les plus associés
 
 * Calculer le coefficient de corrélation au carré entre les fréquences d'apparition des termes de l'index et opinion des utilsateurs (5000 valeurs).
 
-```{r eval = FALSE}
+```{r}
 
   # termes
   x <- x_imbd
@@ -501,19 +501,19 @@ Le but d'une étude d'association est d'identifier les termes les plus associés
 * Montrer les termes dont la valeur d'association $r^2$ est supérieure à 3 pour cent (0.02), puis supérieure à 0.02, et à 0.01. _Note_ : Il faut effectuer un décalage de 48 indices dans l'index pour trouver le codage correct.
 
 
-```{r eval = FALSE}
+```{r}
   # quelque chose à changer
   index[o[ which(r2 > 0.03) + 48 ]] %>% names()
   index[o[ which(r2 > 0.02) + 48 ]] %>% names()
   index[o[ which(r2 > 0.01) + 48 ]] %>% names()
 ```
 
-* Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.03 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions à l'aide d'un diagramme en barre. 
+* Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.02 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions à l'aide d'un diagramme en barre. 
 
 
-```{r eval = FALSE}
+```{r}
 # Calculer la frequence des termes realisant la condition
-diag_freq = function(corr){
+diag_freq = function(corr, color){
   ind <- c()
   list <- index[o[ which(r2 > corr) + 48 ]]
   for (i in 1:length(list)){
@@ -523,32 +523,38 @@ diag_freq = function(corr){
   freq <- x[,ind] %>% apply(2, mean) #moyenne sur les colonnes
 # mots dans l'index et barplot
   names(freq) <-  index[o[which(r2 > corr) + 48]] %>% names() 
-  b = barplot(sort(freq, decreasing = TRUE), col = "lightblue", las = 2)
+  b = barplot(sort(freq, decreasing = TRUE), col = color, las = 2)
   return(freq)
 }
 
 
-diag_freq(0.03)
+diag_freq(0.02, "lightblue")
 ```
 
 
 
-* Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.02 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions  à l'aide d'un diagramme en barre.
-
-```{r eval = FALSE}
-diag_freq(0.02)
-
-```
+* Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.01 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions  à l'aide d'un diagramme en barre.
 
 ```{r}
-diag_freq(0.01)
+diag_freq(0.01, "lightblue")
 ```
+
+
 
 * Dans quelles proportions les termes de valeur d'association $r = cor(x,y)$ supérieure à 0.1 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions  à l'aide d'un diagramme en barre.
 
-```{r eval = FALSE}
-  yes_we_can
-  barplot(sort(freq, decreasing = TRUE), col = "pink", las = 2)
+```{r}
+ind <- c()
+  list <- index[o[ which(r > 0.1) + 48 ]]
+  for (i in 1:length(list)){
+    ind[i]=list[[i]]
+  }
+
+  freq <- x[,ind] %>% apply(2, mean) #moyenne sur les colonnes
+# mots dans l'index et barplot
+  names(freq) <-  index[o[which(r > 0.1) + 48]] %>% names() 
+  b = barplot(sort(freq, decreasing = TRUE), col = "pink", las = 2)
+
 ```
 
 
@@ -556,9 +562,18 @@ diag_freq(0.01)
 *  Dans quelles proportions les termes de valeur d'association $r$ inférieure à $-0.1$ apparaissent-ils dans les documents ? Représenter graphiquement ces proportions  à l'aide d'un diagramme en barre.
 
 
-```{r eval = FALSE}
-  i_have_a_dream
-  barplot(sort(freq, decreasing = TRUE), col = "palegreen", las = 2)
+```{r}
+
+ind <- c()
+list <- index[o[ which(r < -0.1) + 48 ]]
+  for (i in 1:length(list)){
+    ind[i]=list[[i]]
+  }
+  
+freq <- x[,ind] %>% apply(2, mean) #moyenne sur les colonnes
+# mots dans l'index et barplot
+names(freq) <-  index[o[which(r < -0.1) + 48]] %>% names()  
+barplot(sort(freq, decreasing = TRUE), col = "palegreen", las = 2)
 ```
 
 
