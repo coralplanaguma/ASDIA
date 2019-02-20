@@ -3,7 +3,6 @@ title: "ASDIA Projet 1"
 output:
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 
 
@@ -82,7 +81,7 @@ Démontrer que le minimum de la fonction de perte correspond au maximum de la vr
 
 * Filtrer les données correspondant aux chiffres $2$ et $7$. Commenter et compléter le code suivant. Exécuter le code en changeant l'option de chunck. 
 
-```{r eval = FALSE}
+```{r}
 # On conserve les 2 et les 7 uniquement
   boo_train <- y_train == 2 | y_train == 7 
   x_train <- mnist$train$x[boo_train,,]
@@ -105,7 +104,7 @@ Démontrer que le minimum de la fonction de perte correspond au maximum de la vr
 * Les images de dimension 28x28 doivent être converties en vecteurs de longueur 784 ($= 28 \times 28$). Cela peut se faire de plusieurs manières. En particulier, la fonction `array_reshape()` de keras est très utile pour cela.  
 
 
-```{r eval = FALSE}
+```{r}
 # reshape
   x_train <- array_reshape(x_train, c(nrow(x_train), 784))
   x_test <- array_reshape(x_test, c(nrow(x_test), 784))
@@ -114,7 +113,7 @@ Démontrer que le minimum de la fonction de perte correspond au maximum de la vr
 * Normaliser les données pour obtenir des valeurs réelles (flottants) entre 0 et 1 en divisant les valeurs présentes par 255.  Utiliser la fonction `image()` pour visualiser le premier chiffre test de la base de données réduite dans cette nouvelle représentation. 
 
 
-```{r eval = FALSE}
+```{r}
 # rescale
   x_train <- x_train/255
   x_test <- x_test/255
@@ -127,7 +126,7 @@ Démontrer que le minimum de la fonction de perte correspond au maximum de la vr
 
 * Les données de classe sont des entiers 2,7. Convertir ces données en variables booléennes ou binaires. La valeur 1 ou `TRUE` correspondra à un 7.
   
-```{r eval = FALSE}
+```{r}
   y_train <- y_train == 7
   y_test <-  y_test == 7
 ```
@@ -201,7 +200,7 @@ data.frame(terme, definition)
 * Donner un tableau de correspondance entre les notions mathématiques introduites dans la section précédente et les termes apparaissant dans l'apprentissage du modèle. 
 ```{r}
 terme <- c("x_train", "y_train", "epochs", "batch_size", "validation_data")
-definition <- c("Ensemble des images (observations)","Sortie attendue","Nombre d'images utilisé par le réseau à chaque itération","Nombre d'entraînements du modèle", "Données permettant d'évaluer le modèle")
+definition <- c("Ensemble des images (observations)","Sortie attendue","Nombre d'entraînements du modèle", "Nombre d'images utilisées par le réseau à chaque itération", "Données permettant d'évaluer le modèle")
 data.frame(terme, definition)
 ```
 * Quelle est signification des courbes `loss` et `val_loss` que l'on voit tracées? 
@@ -262,6 +261,7 @@ res_log_loss <- c()
 res_acc<-c()
 names<-c()
 
+
 create_model = function (nb_couches, nb_neurones, val_dropout){
   #Renvoie un modèle correspondant aux critères entrés en paramètres
   model <- keras_model_sequential()
@@ -283,12 +283,14 @@ create_model = function (nb_couches, nb_neurones, val_dropout){
   return (model);
 }
 
+list_model<-c()
 compteur = 1
 for (i in 1:2){
   for (j in 1:2){
     for(k in 1:2){
-      model=create_model(nb_couches[i], nb_neurones[j], val_dropout[k])
 
+      created_model<-create_model(nb_couches[i], nb_neurones[j], val_dropout[k])
+      model = created_model
       # Configuration du modèle pour l'apprentissage
       model %>% compile(
           loss = 'binary_crossentropy',
@@ -310,32 +312,36 @@ for (i in 1:2){
       res_acc[compteur] = res$acc
       names[compteur]=paste(c("modele", nb_couches[i], nb_neurones[j], val_dropout[k]*10), collapse = "_")
       compteur = compteur + 1
-  
-    }
+      }
   }
 }
 
 data <- data.frame(names, res_log_loss, res_acc)
 barplot(res_log_loss, main = "Comparaison des erreurs de logloss", ylab = "logloss", legend.text = data$names, col = rainbow((8)))
 barplot(res_acc, main = "Comparaison des erreurs de classification", ylab = "accuracy", ylim = c(0.96, 0.99), legend.text = data$names, args.legend = list(x = "bottomleft"), col = rainbow(8))
-
+  
 ```
 
 
 * Quel modèle de prédiction vous parait être le meilleur ? 
 
-* Donner la liste des chiffres mal classés et les probabilités de classement pour chacune des erreurs.
-# pour ce modèle
+Afin de faire notre choix, on essaie de trouver un modèle qui maximise l'accuracy et qui minimise la valeur du log loss, ainsi on choisi le modèle avec les paramètres 1, 100, 0.2.
+
+* Donner la liste des chiffres mal classés et les probabilités de classement pour chacune des erreurs. 
 ```{r}
-index = 1:2060
-#pred_class <- model %>% predict_classes(x_test)
-#wrong = index[pred_class[, 1]!=y_test]
-#predict_proba(model, x_test)[145]
+
+probas<-c()
+
+pred_class <- model %>% predict_classes(x_test)
+wrong = index[pred_class[, 1]!=y_test]
+for (i in 0:length(wrong)){
+  probas[i] = predict_proba(model, x_test)[wrong[i]]
+}
+data.frame(wrong, probas)
 ```
 
-
-
 # Partie 3 : Analyse de critiques de films (IMDB)
+
 
 
 ```{r}
@@ -346,6 +352,7 @@ library(keras)
 
 ## Index des termes et sacs de mots.
 
+
 ```{r}
   index <- keras::dataset_imdb_word_index()
   names(index[index == 1])
@@ -353,34 +360,26 @@ library(keras)
 
 Sans surprise, le terme le plus fréquemment utilisé est l'article "the". Sa valeur dans l'index est donc égale à 1. 
 
+
 ```{r}
   # Réordonnons l'index
   o <- as.numeric(index) %>% order()
-  # Récupération des dix termes les plus utilisés das l'index
   index[o[1:10]] %>% names()
 ```
 
 Nous voyons qu'il s'agit d'articles, de prépositions ou de termes non-informatifs, comme par exemple, des éléments extraits des balises html (br). Il sera peut-être préférable d'éliminer les termes les plus utilisés. L'entrée 49 correspondant au terme "good".
 
-
-
-Pour réduire le temps de calcul, nous conservons uniquement les 5000 termes les plus fréquents. Dans la suite, chaque document sera représenté par une suite de fréquences de termes représentés par les codes de l'index. Le jeu de données résultant de cette étape est nommé `imbd`.
+Pour réduire le temps de calcul, nous conservons uniquement les 5000 termes les plus fréquents.
 
 ```{r}
-# Sékection des données
   imbd <-  keras::dataset_imdb(path = "imdb.npz",
-                              num_words = 5048, # nombre de mots conservés
-                              skip_top = 49, # élimination des termes les plus utilisés (non pertinents)
-                              oov_char = -2, # caractère qui remplace les valeurs qui ont été supprimées
+                              num_words = 5048, # index d dernier terme pris en compte
+                              skip_top = 49, # élimination des premiers termes (non pertinents)
+                              oov_char = -2, # craractère qui remplace les termes éliminés
                               start_char = -1, # début de séquence
                               index_from = 0)
 ```
 
-
-
-```{r}
-  summary(imbd)
-```
 
 ## Défi "analyse de sentiments"
 
@@ -390,13 +389,12 @@ Pour réduire le temps de calcul, nous conservons uniquement les 5000 termes les
 
 
 ```{r eval = FALSE}
-  # comment 1
+  # Conversion du document 12 en un vecteur de longueur 5000
   help(sapply)
-  a = imbd$train$x[[12]]
-  result <- sapply(49:5048, FUN = function(x) length(a[a==x]))
+  doc <- imbd$train$x[[12]]
+  result <- sapply(49:5048, FUN = function(x) length(doc[doc == x]))
+  result[1:100]
 ```
-
-
 
 * Constituer un jeu de données comportant 10000 documents choisis pour moitié dans l'ensemble "train" et pour moitié dans l'ensemble "test" de l'IMBD. Techniquement nous le constituerons en 20 étapes, pour limiter l'impact sur la mémoire. Commenter et exécuter le code suivant
 
@@ -410,7 +408,7 @@ x_imbd <- NULL
     
       for (j in (500*(i-1)+1):(500*i)){
         
-        # comment 1
+        # on récupère les 5000 premiers documents de imbd$train
         
         doc_temp <- imbd$train$x[[j]]
         x_imbd_500 <- rbind(x_imbd_500, 
@@ -428,7 +426,7 @@ x_imbd <- NULL
     
       for (j in (500*(i-1)+1):(500*i)){
         
-        # comment 2
+        # On récupère les 5000 premiers documents de x$test
         
         doc_temp <- imbd$test$x[[j]]
         x_imbd_500 <- rbind(x_imbd_500, 
@@ -442,10 +440,18 @@ x_imbd <- NULL
 ```
 
 * Que contient l'objet `x_imbd` ?
+x_imbd contient désormais 10000 documents. Les 5000 premiers appartenaient à l'ensemble "train", les autres à l'ensemble "test". Les documents sont stockés sous la forme de vecteurs de longueurs 5000. A la position d'indice i, on trouve la fréquence d'apparition du terme d'index i dans le document. 
 
 * Définir les classes $y = 0$ ou $y=1$ pour chaque élément de `x_imbd`
+```{r}
+classe <- c("y=0", "y=1")
+definition <- c("opinion positive", "opinion négative")
+data.frame(classe, definition)
+```
+
 
 ```{r eval = FALSE}
+# Récupération de s valeurs y associées aux fichiers sélectionnés                                           
   y_imbd <- c(imbd$train$y[1:5000], imbd$test$y[1:5000])
 ```
 
@@ -459,15 +465,17 @@ Le but d'une étude d'association est d'identifier les termes les plus associés
 * Calculer le coefficient de corrélation au carré entre les fréquences d'apparition des termes de l'index et opinion des utilsateurs (5000 valeurs).
 
 ```{r eval = FALSE}
-  # comment
+
+  # termes
   x <- x_imbd
   
-  # comment
+  # opinion
   y <- y_imbd
   
   # comment
-  r <- find_me
+  r <- cor(x, y)
   r2 <- r^2
+
 ```
 
 
@@ -476,30 +484,46 @@ Le but d'une étude d'association est d'identifier les termes les plus associés
 
 ```{r eval = FALSE}
   # quelque chose à changer
+  index[o[ which(r2 > 0.03) + 48 ]] %>% names()
   index[o[ which(r2 > 0.02) + 48 ]] %>% names()
+  index[o[ which(r2 > 0.01) + 48 ]] %>% names()
 ```
 
-* Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.02 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions à l'aide d'un diagramme en barre. 
+* Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.03 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions à l'aide d'un diagramme en barre. 
 
 
 ```{r eval = FALSE}
 # Calculer la frequence des termes realisant la condition
-  freq <- x[, conditio_logicae ] %>% apply(2, mean) 
+diag_freq = function(corr){
+  ind <- c()
+  list <- index[o[ which(r2 > corr) + 48 ]]
+  for (i in 1:length(list)){
+    ind[i]=list[[i]]
+  }
 
+  freq <- x[,ind] %>% apply(2, mean) #moyenne sur les colonnes
 # mots dans l'index et barplot
-  names(freq) <-  index[o[which(r2 > 0.02) + 48]] %>% names() 
-  barplot(sort(freq, decreasing = TRUE), col = "lightblue", las = 2)
+  names(freq) <-  index[o[which(r2 > corr) + 48]] %>% names() 
+  b = barplot(sort(freq, decreasing = TRUE), col = "lightblue", las = 2)
+  return(freq)
+}
+
+
+diag_freq(0.03)
 ```
 
 
 
 * Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.02 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions  à l'aide d'un diagramme en barre.
 
-
 ```{r eval = FALSE}
-  yes_we_can
+diag_freq(0.02)
+
 ```
 
+```{r}
+diag_freq(0.01)
+```
 
 * Dans quelles proportions les termes de valeur d'association $r = cor(x,y)$ supérieure à 0.1 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions  à l'aide d'un diagramme en barre.
 
