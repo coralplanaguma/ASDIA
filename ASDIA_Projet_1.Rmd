@@ -260,7 +260,6 @@ res_log_loss <- c()
 res_acc<-c()
 names<-c()
 
-
 create_model = function (nb_couches, nb_neurones, val_dropout){
   #Renvoie un modèle correspondant aux critères entrés en paramètres
   model <- keras_model_sequential()
@@ -286,10 +285,10 @@ compteur = 1
 for (i in 1:2){
   for (j in 1:2){
     for(k in 1:2){
-      model1<-create_model(nb_couches[i], nb_neurones[j], val_dropout[k])
+      model<-create_model(nb_couches[i], nb_neurones[j], val_dropout[k])
 
       # Configuration du modèle pour l'apprentissage
-      model1 %>% compile(
+      model %>% compile(
           loss = 'binary_crossentropy',
           optimizer = optimizer_rmsprop(lr = 0.001, rho = 0.9, decay = 0),
           metrics = c('accuracy')
@@ -309,41 +308,32 @@ for (i in 1:2){
       res_acc[compteur] = res$acc
       names[compteur]=paste(c("modele", nb_couches[i], nb_neurones[j], val_dropout[k]*10), collapse = "_")
       compteur = compteur + 1
-      }
+  
+    }
   }
 }
 
 data.frame(names, res_log_loss, res_acc)
 barplot(res_log_loss, legend.text = "Diagramme log_loss")
 barplot(res_acc, legend.text = "Diagramme des erreurs de classification")
-  
-```
 
-Inclure dans tableau une colonne indiquant le nom de chaque modele. Par exemple, un modèle à 5 couches cachées, 10 neurones par couche et une valeur "dropout" de 0.2 pourra s'appeler "modele_5_10_2"
-
-```{r}
-paste(c("modele", 5, 10, 2), collapse = "_")
 ```
 
 
 * Quel modèle de prédiction vous parait être le meilleur ? 
 
-* Donner la liste des chiffres mal classés et les probabilités de classement pour chacune des erreurs. 
+* Donner la liste des chiffres mal classés et les probabilités de classement pour chacune des erreurs.
+# pour ce modèle
+```{r}
+index = 1:2060
+pred_class <- model %>% predict_classes(x_test)
+wrong = index[pred_class[, 1]!=y_test]
+predict_proba(model, x_test)[145]
+```
+
 
 
 # Partie 3 : Analyse de critiques de films (IMDB)
-
-
-L'objectif de cette séance est de répondre à un défi de classification portant sur l'analyse d'opinion à partir de documents textuels ("natural language processing"). 
-
-Les documents analysés sont des critiques de films écrites par des utilisateurs du site web "Internet Movie Data Base" (IMDB). À chaque critique est associée une note donnée par l'utilisateur du site. Seules les notes extrêmes ont été conservées et converties en valeurs binaires représentant des opinions positives ou négatives envers le film.  
-
-La base de données comporte 50000 critiques de films. Chaque document est prétraité et représenté sous le format d'un _sac de mots_ ("bag of words") pour en faciliter l'analyse. Un sac de mots peut être vu comme une représentation des termes d'un document partir des fréquences d'occurrence des mots dans la base IMDB.
- 
-Dans cette séance de TP, nous téléchargerons un échantillon de la base de données et constituerons un sous-échantillon comportant 10000 documents annotés. Chaque document est associé à une évaluation traduisant une opinion positive (valeur 0) ou négative (valeur 1) des utilisateurs. 
-
-Le but de ce TP est de prédire le mieux possible l'opinion ou le _sentiment_ des utilisateurs à partir des fréquences d'occurrence de certains termes apparaissant dans les textes. Un échantillon de test comportant 5000 critiques indépendantes sera utilisé par l'enseignant pour évaluer la méthode sélectionnée dans le défi final.
-
 
 
 ```{r}
@@ -354,13 +344,6 @@ library(keras)
 
 ## Index des termes et sacs de mots.
 
-À chaque terme d'un texte (aussi appelé _document_) est associé une fréquence d'apparition globale dans la base de données IMDB. Les termes sont référencés dans un index à l'aide d'un nombre indiquant leur rang d'apparition dans la base de données. Dans l'index, les termes sont triés du plus fréquent au moins fréquent.
-
-L'index peut être consulté à partir de la bibliothèque `keras`, sous forme de liste dont les attributs sont les termes utilisés dans la base de données. Pour cela, on utlise la fonction `dataset_imdb_word_index()`. L'index est illustré ci-dessous. 
-
-Le numéro trouvé dans l'index correspond au rang d'un terme donné. Pour trouver le mot le plus fréquemment utilisé dans l'IMDB, on peut chercher le terme dont la valeur est égale au rang 1. L'index contient aussi quatres valeurs spéciales (start, pad, unknown, unused). 
-
-
 ```{r}
   index <- keras::dataset_imdb_word_index()
   names(index[index == 1])
@@ -368,57 +351,34 @@ Le numéro trouvé dans l'index correspond au rang d'un terme donné. Pour trouv
 
 Sans surprise, le terme le plus fréquemment utilisé est l'article "the". Sa valeur dans l'index est donc égale à 1. 
 
-L'article "the" se retrouve à la position 85976 dans l'index. L'index n'est donc pas ordonné par la fréquence des termes, mais par une permutation. Nous pouvons utiliser la fonction `order()` pour réordonner l'index et trouver les 10 termes les plus utilisés dans l'ensemble des critiques de films.
-
 ```{r}
+  # Réordonnons l'index
   o <- as.numeric(index) %>% order()
+  # Récupération des dix termes les plus utilisés das l'index
   index[o[1:10]] %>% names()
 ```
 
 Nous voyons qu'il s'agit d'articles, de prépositions ou de termes non-informatifs, comme par exemple, des éléments extraits des balises html (br). Il sera peut-être préférable d'éliminer les termes les plus utilisés. L'entrée 49 correspondant au terme "good".
 
+
+
 Pour réduire le temps de calcul, nous conservons uniquement les 5000 termes les plus fréquents. Dans la suite, chaque document sera représenté par une suite de fréquences de termes représentés par les codes de l'index. Le jeu de données résultant de cette étape est nommé `imbd`.
 
 ```{r}
+# Sékection des données
   imbd <-  keras::dataset_imdb(path = "imdb.npz",
-                              num_words = 5048,
-                              skip_top = 49,
-                              oov_char = -2,
-                              start_char = -1,
+                              num_words = 5048, # nombre de mots conservés
+                              skip_top = 49, # élimination des termes les plus utilisés (non pertinents)
+                              oov_char = -2, # caractère qui remplace les valeurs qui ont été supprimées
+                              start_char = -1, # début de séquence
                               index_from = 0)
 ```
 
-Les données enregistrées dans l'objet `imbd` se présentent sous la forme de listes de documents (train et test). On utilisera les "double-crochets" ou le symbole dollar pour accéder aux attributs de ces listes.
+
 
 ```{r}
   summary(imbd)
 ```
-
-
-Par exemple le document numéro 12 dans l'ensemble d'apprentissage est lu de la manière suivante. 
-
-```{r}
-  document <- imbd$train$x[[12]]
-  document
-```
-
-Nous voyons que le terme d'indice -2 est fréquent. Après filtrage, il correspond en fait à la chaîne de caractères **UNK** signifiant unknown. Cette chaîne apparait car nous nous sommes restreint à un dictionnaire de 5000 mots. 
-
-Les fréquences des termes apparaissant dans le document 12 peuvent être données par la fonction `table()`. Cette fonction utilise l'ordre alphabétique pour représenter les comptages de chaque terme.  
-
-```{r}
-  table(sapply(document[document > - 2], FUN = function(x) names(index[index == x])))
-```
-
-Le document 12 contient des termes plutôt négatifs. Il est associé à une opinion négative (valeur 0). Cela se vérifie en affichant la variable $y$.
-
- 
-```{r}
-  imbd$train$y[12]
-```
-
-Pour la suite, c'est à vous de jouer. Pour ne pas entrer dans les subtilités du traitement du langage, nous nous appuierons sur un codage simplifié des textes basé sur les fréquences des mots de l'index (one-hot encoding). Pour un encodage par 'embeddings', une méthode particulièrement dédiée à l'analyse de texte, on peut trouver des solutions sur le web.
-
 
 ## Défi "analyse de sentiments"
 
