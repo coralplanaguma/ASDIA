@@ -3,6 +3,7 @@ title: "ASDIA Projet 1"
 output:
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 
@@ -252,6 +253,7 @@ Pour les données de l'exercice précédent, répondre aux questions suivantes.
   - valeur de `dropout` par couche cachée : 0.2 ou 0.8.
   
 ```{r}
+set.seed(3)
 nb_couches <-c(1, 5)
 nb_neurones<-c(10, 100)
 val_dropout<-c(0.2, 0.8)
@@ -313,9 +315,9 @@ for (i in 1:2){
   }
 }
 
-data.frame(names, res_log_loss, res_acc)
-barplot(res_log_loss, legend.text = "Diagramme log_loss")
-barplot(res_acc, legend.text = "Diagramme des erreurs de classification")
+data <- data.frame(names, res_log_loss, res_acc)
+barplot(res_log_loss, main = "Comparaison des erreurs de logloss", ylab = "logloss", legend.text = data$names, col = rainbow((8)))
+barplot(res_acc, main = "Comparaison des erreurs de classification", ylab = "accuracy", ylim = c(0.96, 0.99), legend.text = data$names, args.legend = list(x = "bottomleft"), col = rainbow(8))
 
 ```
 
@@ -326,9 +328,9 @@ barplot(res_acc, legend.text = "Diagramme des erreurs de classification")
 # pour ce modèle
 ```{r}
 index = 1:2060
-pred_class <- model %>% predict_classes(x_test)
-wrong = index[pred_class[, 1]!=y_test]
-predict_proba(model, x_test)[145]
+#pred_class <- model %>% predict_classes(x_test)
+#wrong = index[pred_class[, 1]!=y_test]
+#predict_proba(model, x_test)[145]
 ```
 
 
@@ -390,8 +392,8 @@ Pour réduire le temps de calcul, nous conservons uniquement les 5000 termes les
 ```{r eval = FALSE}
   # comment 1
   help(sapply)
-  result <- sapply(49:5048, FUN = function(x) cogito_ergo_sum)
-  result[1:100]
+  a = imbd$train$x[[12]]
+  result <- sapply(49:5048, FUN = function(x) length(a[a==x]))
 ```
 
 
