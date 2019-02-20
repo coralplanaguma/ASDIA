@@ -501,7 +501,7 @@ Et voilà. On est en pleine forme et on dispose d'une base d'apprentissage compo
 
 Le but d'une étude d'association est d'identifier les termes les plus associés aux opinions positives ou négatives des utilisateurs. Pour cela, nous evaluons la correlation au carré entre l'occurrence de chaque terme et l'opinion de l'utilisateur (présence d'un 1). Il se peut que certaines valeurs de corrélation ne soient pas calculables à cause d'un écart-type nul. 
 
-* Calculer le coefficient de corrélation au carré entre les fréquences d'apparition des termes de l'index et opinion des utilsateurs (5000 valeurs).
+* Calcul du coefficient de corrélation au carré entre les fréquences d'apparition des termes de l'index et opinion des utilsateurs (5000 valeurs).
 
 ```{r}
 
@@ -608,25 +608,59 @@ barplot(sort(freq, decreasing = TRUE), col = "palegreen", las = 2)
 * Donner le code R correspondant au meilleur modèle que vous avez ajusté (chunk ci-dessous). On considèrera la graine du générateur aléatoire comme un hyperparamètre supplémentaire du modèle. Donner la valeur finale d'entropie croisée estimée sur votre ensemble test. On fera en sorte que le résulat soit complètement reproductible à partir du code proposé. 
 
 
-```{r eval = FALSE}
+```{r}
+set.seed(seed = 5427381)
+x_train <- x[1:5000,]
+x_test <- x[5001:10000,]
+y_train <- y[1:5000]
+y_test <- y[5001:10000]
+
+val_dropout = 0.5
+nb_neurones = 15
+nb_couches = 2
 # code de mon meilleur modèle
-# Ne pas oublier d'inclure la seed du générateur aléatoire 
-# set.seed(seed = 5427381)
-  model <-  deus_ex_machina
+model<-keras_model_sequential()
+
+# Initialisation de la première couche avec fonction d'activation "relu" et 256 neurones.
+model %>%
+layer_dense(units = nb_neurones, activation = 'relu', input_shape = 5000) %>% 
+layer_dropout(rate = val_dropout) %>%
+  
+# Initialisation des couches suivantes
+for(i in 1: nb_couches){
+  model %>%
+  layer_dense(units = nb_neurones, activation = 'relu') %>% 
+  layer_dropout(rate = val_dropout)
+}  
+
+# Initialisation de ladernière couche
+model %>%
+layer_dense(units = 1, activation = 'sigmoid')
+
+
+# Configuration du modèle pour l'apprentissage
+model %>% compile(
+          loss = 'binary_crossentropy',
+          optimizer = 'adam',
+          metrics = c('accuracy')
+      )
+
+# Entraînement du réseau
+history <- model %>% fit(
+                          x_train, 
+                          y_train, 
+                          epochs = 20, 
+                          batch_size = 128, 
+                          validation_data = list(x_test, y_test))
+
+# Evaluation du modèle
+model %>% evaluate(x_test, y_test)
+
+
 ```
 
 
 
-
-# Règles de rendu
-
-* Ce projet donne lieu à un compte rendu séparé, dans lequel on aura pris soin de reporter les sections de ce document comportant vos réponses, commentaires, et vos codes complétés. Merci de ne pas reporter les sections "théoriques".
-
-* Les codes R doivent être inclus dans le texte du compte-rendu (menu **Insert**) et l'ensemble doit être commenté avec précision. **Les commentaires compteront pour une part importante dans la note**.
-
-* Le compte-rendu doit être déposé **dans TEIDE**. 
-
-* Le compte-rendu doit être déposé **au format HTML uniquement** et intitulé "Rendu_Projet_1.html". Utiliser la fonction **knitr** du menu de rstudio pour obtenir le document au format souhaité. **Les fichiers sources (Rmd ou nb.html) ne seront pas acceptés**.
 
 
 
