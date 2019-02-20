@@ -252,6 +252,7 @@ Pour les données de l'exercice précédent, répondre aux questions suivantes.
   - valeur de `dropout` par couche cachée : 0.2 ou 0.8.
   
 ```{r}
+set.seed(3)
 nb_couches <-c(1, 5)
 nb_neurones<-c(10, 100)
 val_dropout<-c(0.2, 0.8)
@@ -297,14 +298,14 @@ for (i in 1:2){
       
       
       # Entraînement du réseau
-      history <- model %>% fit(
+      history <- model1 %>% fit(
                               x_train, 
                               y_train, 
                               epochs = 20, 
                               batch_size = 128, 
                               validation_data = list(x_test, y_test))
       res <- c()
-      res = model %>% evaluate(x_test, y_test)
+      res = model1 %>% evaluate(x_test, y_test)
       res_log_loss[compteur] = res$loss
       res_acc[compteur] = res$acc
       names[compteur]=paste(c("modele", nb_couches[i], nb_neurones[j], val_dropout[k]*10), collapse = "_")
@@ -313,23 +314,29 @@ for (i in 1:2){
   }
 }
 
-data.frame(names, res_log_loss, res_acc)
-barplot(res_log_loss, legend.text = "Diagramme log_loss")
-barplot(res_acc, legend.text = "Diagramme des erreurs de classification")
+data <- data.frame(names, res_log_loss, res_acc)
+barplot(res_log_loss, main = "Comparaison des erreurs de logloss", ylab = "logloss", legend.text = data$names, col = rainbow((8)))
+barplot(res_acc, main = "Comparaison des erreurs de classification", ylab = "accuracy", ylim = c(0.96, 0.99), legend.text = data$names, args.legend = list(x = "bottomleft"), col = rainbow(8))
   
-```
-
-Inclure dans tableau une colonne indiquant le nom de chaque modele. Par exemple, un modèle à 5 couches cachées, 10 neurones par couche et une valeur "dropout" de 0.2 pourra s'appeler "modele_5_10_2"
-
-```{r}
-paste(c("modele", 5, 10, 2), collapse = "_")
 ```
 
 
 * Quel modèle de prédiction vous parait être le meilleur ? 
 
-* Donner la liste des chiffres mal classés et les probabilités de classement pour chacune des erreurs. 
+Afin de faire notre choix, on essaie de trouver un modèle qui maximise l'accuracy et qui minimise la valeur du log loss, ainsi on choisi le modèle avec les paramètres 1, 100, 0.2.
 
+* Donner la liste des chiffres mal classés et les probabilités de classement pour chacune des erreurs. 
+```{r}
+
+probas<-c()
+
+pred_class <- model %>% predict_classes(x_test)
+wrong = index[pred_class[, 1]!=y_test]
+for (i in 0:length(wrong)){
+  probas[i] = predict_proba(model, x_test)[wrong[i]]
+}
+data.frame(wrong, probas)
+```
 
 # Partie 3 : Analyse de critiques de films (IMDB)
 
