@@ -61,6 +61,17 @@ $$
 
 * Démontrer le théorème. 
 
+$$
+\begin{align}
+\mathbb{E}[L(q_{opt}({\bf x}), y)|x] &= h(p_Y(.|{\bf x}), q_.(x))\\
+                                    &= h(q_{opt})
+
+\end{align}
+$$
+
+Or, on amontré que $\mathbb{E}[L(q_{opt}({\bf x}), y)|x] \geq h(q_{opt})$. Donc d'après les résultats qui précèdent, $q_{opt}$ minimise l'espérance $\mathbb{E}[L(q_{opt}({\bf x}), y)]$
+
+
 
 En conclusion, minimiser l'espérance conditionnelle $\mathbb{E}[L(q({\bf x}), y) | {\bf x} ]$ revient à minimiser la divergence $D_{KL}(  p_{\sf y|{\bf x}} \| q({\bf x}) )$. Ainsi, nous pouvons affirmer que minimiser la perte moyenne log-loss revient à minimiser l'information perdue lorsque l'on approche la loi cible $p(y|{\bf x})$ par un modèle probabiliste $q({\bf x})$. 
 
