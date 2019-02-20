@@ -287,7 +287,7 @@ compteur = 1
 for (i in 1:2){
   for (j in 1:2){
     for(k in 1:2){
-      model<-create_model(nb_couches[i], nb_neurones[j], val_dropout[k])
+      model=create_model(nb_couches[i], nb_neurones[j], val_dropout[k])
 
       # Configuration du modèle pour l'apprentissage
       model %>% compile(
