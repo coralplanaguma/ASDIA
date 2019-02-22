@@ -64,27 +64,36 @@ $$
 
 * Démontrer le théorème. 
 
+On a la formule suivante:
+$$
+\mathbb{E}[L(q({\bf x}), y)|x] = h(p_Y(.|{\bf x}), q_.({\bf x}))
+
+$$
+
+avec $q_.({\bf x})$ la loi de Bernouilli de paramètre $q({\bf x})$. Or, on peut remarquer que $p_Y(.|x)$ suit la loi de Bernouilli de paramètre $q_{opt}$. Ainsi, on peut poser l'égalité suivante:
+
 $$
 \begin{align}
-\mathbb{E}[L(q_{opt}({\bf x}), y)|x] &= h(p_Y(.|{\bf x}), q_.(x))\\
-                                    &= h(q_{opt})
-
+\mathbb{E}[L(q_{opt}({\bf x}), y)|{\bf x}] &= h(p_Y(.|x), p_Y(.|x))\\
+&=h(p_Y(.|x))
 \end{align}
 $$
 
-Or, on a montré que $\mathbb{E}[L(q_{opt}({\bf x}), y)|x] \geq h(q_{opt})$. Donc d'après les résultats qui précèdent, $q_{opt}$ minimise l'espérance $\mathbb{E}[L(q_{opt}({\bf x}), y)]$
+Or, on a montré l'inégalité suivante:$h(p, p') \geq h(p)$.
 
+Ainsi, $h(p_Y(.|{\bf x}), q_.({\bf x})) \geq h(p_Y(.|x))$.
 
+Donc,
+\mathbb{E}(L(q_.({\bf x}, y))| {\bf x}) \geq \mathbb{E(L(q_{opt}({\bf x}, y))|{\bf x})}.\
 
-En conclusion, minimiser l'espérance conditionnelle $\mathbb{E}[L(q({\bf x}), y) | {\bf x} ]$ revient à minimiser la divergence $D_{KL}(  p_{\sf y|{\bf x}} \| q({\bf x}) )$. Ainsi, nous pouvons affirmer que minimiser la perte moyenne log-loss revient à minimiser l'information perdue lorsque l'on approche la loi cible $p(y|{\bf x})$ par un modèle probabiliste $q({\bf x})$. 
+Or, on sait que $p(x) \geq 0$.
 
-
-* On suppose que la perte moyenne est évaluée à partir d'un échantillon de données d'apprentissage $({\bf x}_i, y_i)$, $i = 1, \dots, n$, indépendantes et de même loi. On suppose que la loi conditionnelle est modélisée à l'aide d'ensemble de paramètres, $\theta$, par la fonction suivante
-
+Ainsi, en multipliant les deux membres de l'inégalité ci-dessus, et en intégrant sur le domaine de définition de x, on obtient le résultat voulu :
 $$
-p(y = 1 | {\bf x}, \theta) = q({\bf x}, \theta) \, .
+\mathbb{E}(L(q({\bf x}), y))\geq  \mathbb{E}(L(q_{opt}({\bf x}), y))
 $$
-Démontrer que le minimum de la fonction de perte correspond au maximum de la vraisemblance pour ce modèle. 
+
+*Démontrer que le minimum de la fonction de perte correspond au maximum de la vraisemblance pour ce modèle. 
 
 
 # Partie 2 : Reconnaissance de chiffres manuscrits (2 et 7)
@@ -232,6 +241,7 @@ data.frame(terme, definition)
 ```{r}
 plot(history)
 ```
+
 Les coubes "loss" et "val_loss" représentent respectivement les pertes du modèle pour les données d'entraînement (x_train, y_train) et pour les données de tests (x_test, y_test).
 
 * Evaluer le modèle sur les données de test (erreur de classification et perte log loss)
@@ -256,20 +266,18 @@ table(predicted = pred_class, observed = mnist$test$y[boo_test])
 index = 1:2060
 wrong = index[pred_class[, 1]!=y_test]
 
+# On choisit d'afficher les images d'index 145 et 223, que l'on récupère depuis la liste wrong qui représente la liste des index mal classés.
 x_test[145,] %>% matrix(nrow = 28) %>% .[,28:1] %>% image(col = grey.colors(5))
 x_test[223,] %>% matrix(nrow = 28) %>% .[,28:1] %>% image(col = grey.colors(5))
 
-
-predict_proba(model, x_test)[145]
-predict_proba(model, x_test)[223]
-
+# On affiche la liste des index mal classés ainsi que leurs probabilités de classement
+pred <- predict_proba(model, x_test)[wrong]
+data.frame(wrong, pred)
 ```
-
 
 ## Défi MNIST 
 
 Pour les données de l'exercice précédent, répondre aux questions suivantes.
-  
   
   Construisons 6 modèles dont nous feons varier les paramètres de la anière suivante:
   - nombre de couches cachées : 1 ou 5, 
@@ -457,7 +465,7 @@ x_imbd <- NULL
                          sapply(49:5048, 
                                 FUN = function(ind) sum(doc_temp == ind)))
         
-        if (j%%500 == 0) print(j) # ca rassure
+        #if (j%%500 == 0) print(j) # ca rassure
     }
     x_imbd <- rbind(x_imbd, x_imbd_500)
   }
@@ -475,7 +483,7 @@ x_imbd <- NULL
                          sapply(49:5048, 
                                 FUN = function(ind) sum(doc_temp == ind)))
         
-        if (j%%500 == 0) print(j) # ca rassure
+        #if (j%%500 == 0) print(j) # ca rassure
     }
     x_imbd <- rbind(x_imbd, x_imbd_500)
   }
@@ -530,6 +538,10 @@ Le but d'une étude d'association est d'identifier les termes les plus associés
   index[o[ which(r2 > 0.02) + 48 ]] %>% names()
   index[o[ which(r2 > 0.01) + 48 ]] %>% names()
 ```
+
+
+On remarque que plus $r^2$ diminue, moins les mots permettent de se faire une idée sur l'opinion du commentateur. Par exemple, lorsque $r^2 > 0.03$, on trouve le terme "bad" qui nous indique que l'opinion est négative. Au contraire, lorsque $r^2 > 0.01$, on a par exemple les mots "life" ou "acting" qui ne permettent pas de classifier le commentaire.
+
 
 * Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.02 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions à l'aide d'un diagramme en barre. 
 
@@ -588,7 +600,7 @@ ind <- c()
 ```{r}
 
 ind <- c()
-list <- index[o[ which(r < -0.1) + 48 ]]
+list <- index[o[ which(r < -0.8) + 48 ]]
   for (i in 1:length(list)){
     ind[i]=list[[i]]
   }
