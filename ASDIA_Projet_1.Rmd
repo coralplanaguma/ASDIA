@@ -547,8 +547,10 @@ On remarque que plus $r^2$ diminue, moins les mots permettent de se faire une id
 
 
 ```{r}
+
+title = " Fréquence  des termes tels que r² > 0.02"
 # Calculer la frequence des termes realisant la condition
-diag_freq = function(corr, color){
+diag_freq = function(corr, color, title){
   ind <- c()
   list <- index[o[ which(r2 > corr) + 48 ]]
   for (i in 1:length(list)){
@@ -558,12 +560,12 @@ diag_freq = function(corr, color){
   freq <- x[,ind] %>% apply(2, mean) #moyenne sur les colonnes
 # mots dans l'index et barplot
   names(freq) <-  index[o[which(r2 > corr) + 48]] %>% names() 
-  b = barplot(sort(freq, decreasing = TRUE), col = color, las = 2)
+  b = barplot(sort(freq, decreasing = TRUE), col = color, las = 2, main = title)
   return(freq)
 }
 
 
-diag_freq(0.02, "lightblue")
+diag_freq(0.02, "lightblue", title)
 ```
 
 
@@ -571,7 +573,8 @@ diag_freq(0.02, "lightblue")
 * Dans quelles proportions les termes de valeur d'association $r^2$ supérieure à 0.01 apparaissent-ils dans les documents ? Représenter graphiquement ces proportions  à l'aide d'un diagramme en barre.
 
 ```{r}
-diag_freq(0.01, "lightblue")
+title = " Fréquence  des termes tels que r² > 0.01"
+diag_freq(0.01, "lightblue", title)
 ```
 
 
@@ -588,7 +591,7 @@ ind <- c()
   freq <- x[,ind] %>% apply(2, mean) #moyenne sur les colonnes
 # mots dans l'index et barplot
   names(freq) <-  index[o[which(r > 0.1) + 48]] %>% names() 
-  b = barplot(sort(freq, decreasing = TRUE), col = "pink", las = 2)
+  b = barplot(sort(freq, decreasing = TRUE), col = "pink", las = 2, main = " Fréquence  des termes tels que r > 0.1")
 
 ```
 
@@ -600,7 +603,7 @@ ind <- c()
 ```{r}
 
 ind <- c()
-list <- index[o[ which(r < -0.8) + 48 ]]
+list <- index[o[ which(r < -0.1) + 48 ]]
   for (i in 1:length(list)){
     ind[i]=list[[i]]
   }
@@ -608,14 +611,14 @@ list <- index[o[ which(r < -0.8) + 48 ]]
 freq <- x[,ind] %>% apply(2, mean) #moyenne sur les colonnes
 # mots dans l'index et barplot
 names(freq) <-  index[o[which(r < -0.1) + 48]] %>% names()  
-barplot(sort(freq, decreasing = TRUE), col = "palegreen", las = 2)
+barplot(sort(freq, decreasing = TRUE), col = "palegreen", las = 2, main = " Fréquence  des termes tels que r < - 0.1")
 ```
 
-
+Apriori, plus on a de termes dont la corélation avec y est positive, plus le commentaire a de chances d'être négatif. Or on observe ici des termes à connotations négatives dont la corélation avec y est négative, et inversement pour les termes positifs, ce qui étonne nos scientifiques, y compris les plus doués.
 
 #### Modèles d'apprentissage 
 
-Voici le code R correspondant au modèle qu'on a choisi: ss
+Voici le code R correspondant au modèle qu'on a choisi: 
 
 
 ```{r}
