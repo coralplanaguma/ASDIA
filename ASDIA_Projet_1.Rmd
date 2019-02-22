@@ -72,7 +72,7 @@ $$
 \end{align}
 $$
 
-Or, on amontré que $\mathbb{E}[L(q_{opt}({\bf x}), y)|x] \geq h(q_{opt})$. Donc d'après les résultats qui précèdent, $q_{opt}$ minimise l'espérance $\mathbb{E}[L(q_{opt}({\bf x}), y)]$
+Or, on a montré que $\mathbb{E}[L(q_{opt}({\bf x}), y)|x] \geq h(q_{opt})$. Donc d'après les résultats qui précèdent, $q_{opt}$ minimise l'espérance $\mathbb{E}[L(q_{opt}({\bf x}), y)]$
 
 
 
@@ -362,7 +362,7 @@ res_acc[8] = model_instructions(modele_5_100_8)$acc
 
 names<-c("modele_1_10_2", "modele_1_10_8", "modele_1_100_2", "modele_1_100_8", "modele_5_10_2", "modele_5_10_8", "modele_5_100_2","modele_5_100_8")
 data <- data.frame(names, res_log_loss, res_acc)
-barplot(res_log_loss, main = "Comparaison des erreurs de logloss", ylab = "logloss", legend.text = data$names, col = rainbow((8)))
+barplot(res_log_loss, main = "Comparaison des erreurs de logloss", ylab = "logloss", legend.text = data$names,  args.legend = list(x = "topleft"), col = rainbow((8)))
 barplot(res_acc, main = "Comparaison des erreurs de classification", ylab = "accuracy", ylim = c(0.96, 0.99), legend.text = data$names, args.legend = list(x = "bottomleft"), col = rainbow(8))
 ```
 
@@ -481,10 +481,10 @@ x_imbd <- NULL
   }
 ```
 
-* Que contient l'objet `x_imbd` ?
+* Que contient l'objet `x_imbd` ?\
 x_imbd contient désormais 10000 documents. Les 5000 premiers appartenaient à l'ensemble "train", les autres à l'ensemble "test". Les documents sont stockés sous la forme de vecteurs de longueurs 5000. A la position d'indice i, on trouve la fréquence d'apparition du terme d'index i dans le document. 
 
-* Définir les classes $y = 0$ ou $y=1$ pour chaque élément de `x_imbd`
+* Définisson les classes $y = 0$ ou $y=1$ pour chaque élément de `x_imbd`
 ```{r}
 classe <- c("y=0", "y=1")
 definition <- c("opinion positive", "opinion négative")
@@ -657,7 +657,7 @@ model %>% evaluate(x_test, y_test)
 
 
 
-```{r}
+```{r echo = FALSE}
 dropout_val <- c(0.2, 0.4, 0.4, 0.5, 0.5 , 0.5)
 nb_neurone<-c(100, 10, 4, 10, 1000, 1000)
 nb_couche <-c(3, 5, 10, 10, 1000, 1000)
