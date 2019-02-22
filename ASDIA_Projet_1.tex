@@ -1,0 +1,1317 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={ASDIA Projet 1},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{ASDIA Projet 1}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+\maketitle
+
+\section{Préliminaires}\label{preliminaires}
+
+\section{Partie 1 : Apprentissage supervisé pour la
+classification}\label{partie-1-apprentissage-supervise-pour-la-classification}
+
+\subsection{Objectifs de l'apprentissage
+supervisé}\label{objectifs-de-lapprentissage-supervise}
+
+On suppose qu'une catégorie binaire, \(y \in \{0,1\}\), est associée un
+vecteur d'observations multidimensionelles, notées
+\({\bf x} \in \mathbb{R}^D\). Par exemple, \({\bf x}\) peut représenter
+un image, un texte, un fichier audio, etc. La classification peut
+indiquer la présence d'un animal domestique (chat vs chien), une
+appréciation subjective (sentiment positif ou négatif), un style musical
+(rock ou pop), etc. Dans tous ces exemples, on aura spécifié la
+representation vectorielle des observations d'une manière ou d'une
+autre, par une méthode d'encodage spécifique à l'application considérée.
+
+L'objectif de l'apprentissage supervisé est de construire un modèle de
+prédiction probabiliste, \(q({\bf x}, \theta) \in [0,1]\), évaluant,
+pour tout \({\bf x}\), la probabilité pour que l'observation \({\bf x}\)
+provienne de la catégorie 1. Pour cela, la méthode adoptée consiste à
+minimiser une fonction de perte moyenne
+
+\[
+  L(\theta) = \mathbb{E}[L(q({\bf x}, \theta), y)] \, .
+\]
+
+Les coefficients du modèle, \(\theta\), sont appelés \emph{paramètres}
+ou \emph{poids}. Le problème se résume à minimiser la fonction de perte
+moyenne exprimée en fonction de \(\theta\), c'est à dire calculer les
+coefficients suivants
+
+\[
+\hat \theta = \arg\min_{\theta} L(\theta) \, .
+\]
+
+D'autres coefficients que les paramètres du modèle peuvent aussi entrer
+en compte dans le processus de minimisation. Ces coefficients
+supplémentaires sont appelés les \emph{hyperparamètres}. Ils peuvent
+représenter le nombre d'itérations de l'algorithme de minimisation, la
+dimension ou la complexité du modèle (nombre de neurones ou de couches
+de neurones par exemple), des paramètres de régularisation, la condition
+initiale de l'algorithme de minimisation (seed du générateur), la
+méthode numérique choisie pour réaliser la minimisation de
+\(L(\theta)\), etc.
+
+La valeur théorique de l'espérance étant difficile à calculer, la perte
+moyenne est généralement évaluée à partir d'un échantillon de données
+d'apprentissage \(({\bf x}_i, y_i)\), \(i = 1, \dots, n\). Cet ensemble
+de données est généralement de grande taille et il permet (sous des
+hypothèses raisonnable) d'approcher la valeur moyenne de la fonction de
+perte de la manière suivante
+
+\[
+   L(\theta) \approx \frac1n \sum_{i = 1}^n L(q({\bf x}_i, \theta), y_i) \, .
+\]
+
+La fonction de perte empirique définie ci-dessus est alors utilisée pour
+calculer \(\hat \theta\). Un ensemble de test est généralement utilisé
+pour évaluer les performances prédictives du modèle et choisir un
+ensemble d'hyperparamètres conduisant à des performances satisfaisantes.
+
+\subsection{Perte log-loss (entropie
+croisée)}\label{perte-log-loss-entropie-croisee}
+
+La fonction de perte \emph{log-loss} est très fréquemment considérée par
+les algorithmes d'apprentissage probabiliste. Elle est définie de la
+manière suivante
+
+\[
+L(q({\bf x}), y) = - y \log q({\bf x}) - (1-y)\log (1 - q({\bf x})) \, ,
+\] où \(q({\bf x})\) est identifiée à la probabilité d'observer la
+classe 1 sachant \({\bf x}\), \(q({\bf x}) = q_1({\bf x})\).
+
+La perte moyenne associée à la fonction de perte \textbf{log-loss} est
+égale à
+
+\[
+\mathbb{E}[L(q({\bf x}), y )] =  \int \mathbb{E}[L(q({\bf x}), y) | {\bf x}] p({\bf x}) d{\bf x} \, .
+\] En termes de théorie de l'information, minimiser la perte log-loss
+moyenne revient à minimiser l'information perdue lorsque l'on approche
+la probabilité cible \(p(y = 1|{\bf x})\) par un prédicteur probabiliste
+donné, \(q({\bf x})\).
+
+L'objet de cette partie est de démontrer le résultat suivant.
+
+\textbf{Théorème.} \emph{Soit \(q({\bf x})\) une fonction arbitraire à
+valeur dans \([0,1]\) et} \[
+q_{\rm opt}({\bf x}) = p(y = 1|{\bf x}) \, , \quad \forall {\bf x}.
+\] \emph{Alors, nous avons} \[
+\mathbb{E}[L(q({\bf x}), y )] \geq \mathbb{E}[L(q_{\rm opt}({\bf x}), y )] .
+\]
+
+\begin{itemize}
+\item
+  \textbf{Conditionnement} : Montrer que pour minimiser l'espérance
+  \(\mathbb{E}[L(q({\bf x}), y )]\), il suffit de minimiser l'espérance
+  conditionnelle \(\mathbb{E}[L(q({\bf x}), y ) | {\bf x}]\) pour tout
+  \({\bf x}\).
+\item
+  \textbf{Entropie croisée} : On définit l'\emph{entropie croisée} de
+  deux lois de Bernoulli \(p\) et \(p^\prime\) (attribuant des valeurs à
+  0 ou 1 uniquement) de la manière suivante
+\end{itemize}
+
+\[
+h(p,p^\prime) = - p(y = 0) \log p^\prime(y = 0) - p(y = 1) \log p^\prime(y = 1) .
+\] Démontrer que
+
+\[
+h(p,p^\prime) = \mathbb{KL}(p \| p^\prime) + h(p)  \geq h(p) \, , 
+\] où \(\mathbb{KL}(p \| p^\prime)\) est la divergence Kullback-Leibler
+et \(h(p)\) l'entropie de \(p\).
+
+\[
+\begin{align}
+\mathbb{KL}(p \| p^\prime) &= p(y = 0) \log \frac{p(y = 0)}{p \prime y = 0} + p(y =1) \log \frac{p(y=1)}{p \prime (y = 1)}\\
+&= h(p, p\prime) + p(y=0)\log p(y=0) + p(y=1) \log p(y=1)\\
+&= h(p, p \prime) - h(p)
+\end{align}
+\]
+
+Comme la divergence de Kulback-Leibler est positive, on obtient bien
+l'inégalité attendue.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Entropie croisée et log-loss } : On appelle \(q_{.}({\bf x})\)
+  la loi de Bernoulli de paramètre \(q({\bf x})\). Démontrer que
+\end{itemize}
+
+\[
+\mathbb{E}[L(q({\bf x}), y ) | {\bf x}]  = h(p_{\sf Y}(.|{\bf x}), q_{.}({\bf x}))  .  
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Démontrer le théorème.
+\end{itemize}
+
+En conclusion, minimiser l'espérance conditionnelle
+\(\mathbb{E}[L(q({\bf x}), y) | {\bf x} ]\) revient à minimiser la
+divergence \(D_{KL}( p_{\sf y|{\bf x}} \| q({\bf x}) )\). Ainsi, nous
+pouvons affirmer que minimiser la perte moyenne log-loss revient à
+minimiser l'information perdue lorsque l'on approche la loi cible
+\(p(y|{\bf x})\) par un modèle probabiliste \(q({\bf x})\).
+
+\begin{itemize}
+\tightlist
+\item
+  On suppose que la perte moyenne est évaluée à partir d'un échantillon
+  de données d'apprentissage \(({\bf x}_i, y_i)\), \(i = 1, \dots, n\),
+  indépendantes et de même loi. On suppose que la loi conditionnelle est
+  modélisée à l'aide d'ensemble de paramètres, \(\theta\), par la
+  fonction suivante
+\end{itemize}
+
+\[
+p(y = 1 | {\bf x}, \theta) = q({\bf x}, \theta) \, .
+\] Démontrer que le minimum de la fonction de perte correspond au
+maximum de la vraisemblance pour ce modèle.
+
+\subsection{Réseaux de neurones}\label{reseaux-de-neurones}
+
+\subsubsection{Neurone probabiliste}\label{neurone-probabiliste}
+
+Soit \({\bf x} \in \mathbb{R}^D\). On appelle \emph{neurone
+probabiliste} un prédicteur probabiliste de la forme suivante
+
+\[
+ q({\bf x}, \theta) =  \sigma( {\bf w}^T {\bf x}  - b ) \, , \quad  {\bf x} \in \mathbb{R}^D,
+\] où la fonction sigmoide (\(\sigma\)) est définie par
+
+\[
+\sigma(x) = \frac{1}{1 + e^{-x}}\, , \quad  x \in \mathbb{R},
+\] et le paramètre \(\theta\) possède \((D+1)\) coefficients
+
+\[
+\theta = (b, {\bf w}).
+\]
+
+Le vecteur de coefficients \({\bf w}\) est de dimension \(D\) et \(b\)
+est un scalaire représentant un seuil.
+
+La motivation initiale d'un modèle neuronal est d'imiter un neurone
+biologique. En effet, les variables \({\bf x}\) représentent des stimuli
+externes, les coefficients \({\bf w}\) représentent des poids
+synaptiques, et la fonction ``sigmoide'' correspond à la fonction
+d'activation d'un neurone biologique. Le neurone emet un potentiel
+d'action avec une probabilité d'autant plus grande que la somme pondérée
+des stimuli est grande.
+
+La notation peut être simplifiée en ajoutant une variable d'entrée
+\(x_{0}\) fixée de manière constante à la valeur \(-1\)
+(\(x_{0} = -1\)). Dans ce cas, nous pouvons augmenter la dimension du
+vecteur \({\bf w}\) à \(D+1\), et prendre \(w_0 = b\). La fonction de
+decision neuronale est alors décrite par la formule suivante
+
+\[
+ q({\bf x}, {\bf w}) =  \sigma( {\bf w}^T {\bf x} ) \, , \quad  {\bf x} \in \mathbb{R}^D.
+\] Dans cette notation (abusive), nous n'avons pas augmenté la dimension
+de \({\bf x}\) à \(D+1\) pour bien mettre en évidence que l'espace des
+observation est resté identique.
+
+Notons que la fonction sigmoide n'est pas la seule fonction d'activation
+proposée dans les réseaux neuronaux. La fonction \emph{rectified linear
+unit} (\emph{relu}) est souvent utilisée dans les couches cachées pour
+son efficacité numérique. La fonction \emph{relu} est définie par
+
+\[
+{\rm relu}(x) = \max(0, x) , \, \quad x \in \mathbb{R}.
+\]
+
+Elle est parfois remplacée par la fonction \emph{softplus} définie de la
+manière suivante
+
+\[
+{\rm softplus}(x) = \log(1 + e^{x}), \, \quad x \in \mathbb{R}.
+\] Lorsque l'on encode les variables de classes \(y\) en variables
+catégorielles, \(y = 1\) est codé par (0,1) et \(y = 0\) est codé par
+\((1,0)\) on remplace la fonction sigmoide par la fonction softmax.
+Cette dernière peut être généralisée à plusieurs catégories. Cela a un
+intêret s'il y a plus de deux catégories.
+
+\subsubsection{Réseau de neurones
+probabilistes}\label{reseau-de-neurones-probabilistes}
+
+L'intelligence artificielle propose d'approcher le prédicteur optimal
+par des combinaisons de fonctions neuronales agencées en couches
+successives, comme dans le cerveau humain. L'idée n'est pas d'utiliser
+une base fonctionnelle particulière mais d'apprendre une base adaptable
+au problème considéré, afin d'utiliser les meilleures représentations
+des variables observées dans chaque problème particulier.
+
+Par exemple, un réseau de neurones possédant une couche cachée s'écrit
+de la manière suivante
+
+\[
+ q({\bf x}, {\bf \theta}) = \sigma({\bf W_0}^T \, \sigma({\bf W_1}^T{\bf x}) ) \, .
+\]
+
+où le paramètre global, \(\theta\), inclut les seuils d'activation et
+les coefficients synaptiques. Il correspond à la formule suivante \[
+\theta = ({\bf W_0}, {\bf W_1}).
+\]
+
+Les notations \({\bf W_0}^T\) et \({\bf W_1}^T\) désignent désormais des
+matrices de dimensions respectives \((L\times 1 + 1)\) et
+\((D \times L + L)\) et la fonction \emph{sigmoide} est appliquée à
+chaque coordonnée des vecteurs. Le paramètre \(L\) correspond au nombre
+de neurones dans la couche cachée. Le paramètre global \(\theta\) est
+donc de dimension \((D + 2)L + 1\). Ainsi, pour deux dimensions
+(\(D =2\)) et 20 neurones, nous aurons 81 paramètres distincts dans le
+modèle.
+
+La formule peut se généraliser à l'utilisation de plusieurs couches de
+neurones. On parle alors de réseaux multi-couches. On qualifie les
+réseaux multi-couches de \emph{réseaux profonds} à partir d'une douzaine
+de couches (hum deux selon certains auteurs). Par exemple, un réseau de
+neurones possédant 3 couches cachées s'écrit
+
+\[
+ q({\bf x}, {\bf \theta}) = \sigma( {\bf W_0}^T \sigma({\bf W_1}^T \sigma({\bf W_2}^T \sigma({\bf W_3}^T{\bf x})))) \, , \quad {\bf x} \in \mathbb{R}^D.
+\] {[}Un réseau de neurones artificiels. Le réseau prend une variable de
+dimension 3 en entrée et la classe en deux catégories (softmax) en
+sortie. Il y a une couche cachée possédant 4 neurones.{]}
+
+\subsubsection{Gradient stochastique}\label{gradient-stochastique}
+
+L'apprentissage, c'est à dire la minimisation effective de la fonction
+de perte \(L(\theta)\), est généralement réalisé par une méthode
+d'optimisation numérique. Il existe de nombreuses méthodes
+d'optimisation numérique permettant de trouver un minimum local de la
+fonction \(L(\theta)\).
+
+La méthode de prédilection des réseaux de neurones est la méthode du
+gradient. Il s'agit d'une méthode de minimisation locale. La méthode du
+gradient repose sur le calcul des dérivées partielles de la fonction
+\(L(\theta)\)
+
+\[
+\nabla L = \left( \frac{\partial L}{\partial \theta_1} , \dots, \frac{\partial L}{\partial \theta_m} \right)^T \,.
+\]
+
+D'après la formule de Taylor (ou d'après la définition de l'application
+différentielle), la fonction \(L(\theta)\) peut être développée
+localement de la manière suivante
+
+\[
+L(\theta + d\theta) = L(\theta) + {\bf \nabla} L(\theta)^T d\theta + o(d\theta) \, .
+\] Ainsi, les déplacements \(d\theta\) conduisant aux plus grandes
+variations de la fonction \(L(\theta)\) au voisinage de \(\theta\)
+s'effectuent dans une direction parallèle au vecteur
+\(\nabla L(\theta)\).
+
+La méthode de gradient est une méthode rudimentaire cherchant à suivre
+la ligne de plus grande pente afin de minimiser la fonction de perte,
+\(L(\theta)\). Il s'agit d'une méthode itérative qui met à jour le
+paramètre \(\theta\) de la manière suivante
+
+\[
+\theta^{t+1} = \theta^t - \eta \nabla L(\theta^t) \, .
+\]
+
+La constante \(\eta\) est petite et elle est appelée \emph{taux
+d'apprentissage} (learning rate). Lors d'une mise à jour de
+l'algorithme, la valeur de la fonction \(L\) a ainsi tendance à
+décroitre
+
+\[
+L(\theta^{t+1}) - L(\theta^t) \approx - \eta \| {\bf \nabla} L(\theta^t) \|_2^2 \,  < 0 \,,
+\] et \(\theta^t\) converge vers un minimum local, un point selle ou un
+plateau de \(L(\theta)\).
+
+Cette méthode peut être raffinée en utilisant les dérivées secondes de
+la fonction \(L(\theta)\). Ceci est pertinent lorsque le paramètre
+\(\theta\) est de dimension raisonnable, de l'ordre de quelques dizaines
+de coefficients. En grande dimension, la méthode du du gradient reste la
+méthode favorite dans les implémentations logicielles des réseaux
+neuronaux.
+
+Les méthodes de \emph{gradient stochastique} sont utilisées en très
+grande dimension. Elles implémentent l'algorithme suivant
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Choisir une valeur initiale \(\theta\) et une valeur du taux
+  d'apprentissage \(\eta\).
+\item
+  Répéter les étapes suivantes jusqu'à ce qu'un minimum acceptable soit
+  atteint
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  permuter aléatoirement les éléments de l'échantillon d'apprentissage
+\item
+  pour tout \(i\) de 1 à \(n\), mettre à jour les paramètres de la
+  manière suivante \[
+  \theta^{t+1} = \theta^{t} - \eta_t  \nabla L(q({\bf x}_i , \theta^t), y_i) 
+  \] Un tel cycle aléatoire s'appelle une \emph{époque}.
+\end{itemize}
+
+La phase d'initialisation est une phase cruciale dans les applications.
+Pour la reconnaissance des images, de nombreux réseaux de neurones
+pré-entrainés existent et atteignent d'excellentes performances de
+classification une base de données publiques appelée ``Imagenet''. Les
+logiciels actuels permettent de récupérer les matrices de coefficients
+de réseaux pré-entrainés, simplifiant considérablement la phase
+d'initialisation d'un réseau de neurones destiné à reconnaître des
+images particulières, proche de celles annotées dans la base. On peut,
+en quelques heures, entraîner un réseau de neurones à reconnaître des
+animaux domestiques à partir de quelques milliers d'images. Construire
+et entraîner un tel réseau sans cette condition initiale peut nécessiter
+des ressources considérables.
+
+Plutôt que de parcourir les données de l'échantillon les unes après les
+autres (point 2 de l'algorithme), un compromis entre l'algorithme de
+gradient et l'algorithme de gradient stochastique consiste à considérer
+des paquets (``batch'') de données lors de la mise à jour des
+paramètres. Cette technique est plus rapide mais un peu moins précise
+que le gradient stochastique. La taille du batch devient un
+hyperparamètre supplémentaire sur lequel agir lors de la phase
+d'apprentissage.
+
+L'algorithme de gradient stochastique s'accompagne de conditions
+concernant le taux d'apprentissage. Ce paramètre de l'algorithme peut
+décroître avec le temps. Une condition classique consiste à choisir
+\(\eta_t\) tel que \[
+\sum_{t=1}^\infty \eta_t = \infty \quad {\rm et } \quad \sum_{t=1}^\infty \eta_t^2 < \infty.
+\] De nombreuses variantes d'algorithmes d'optimisation sont disponibles
+dans les programmes de réseaux de neurones. Il est souvent utile de
+pouvoir en tester plusieurs.
+
+\section{Partie 2 : Reconnaissance de chiffres
+manuscrits}\label{partie-2-reconnaissance-de-chiffres-manuscrits}
+
+Dans cet exercice, nous déterminerons les capacités des réseaux de
+neurones de la bibliothèque \emph{Tensorflow} à correctement reconnaître
+des chiffres écrits à la main. La reconnaissance de l'écriture
+manuscrite est un problème difficile, et constitue un test pour les
+algorithmes d'apprentissage. Cet exemple est historique pour les réseaux
+de neurones et largement traité sur internet (il vous sera donc facile
+de savoir si vous faites bien).
+
+Les données de caractères manuscrits sont issues de la base
+\href{https://fr.wikipedia.org/wiki/Base_de_donn\%C3\%A9es_MNIST}{MNIST}
+(Modified National Institute of Standards and Technology). La base de
+données MNIST est une base de données de chiffres écrits à la main. Elle
+regroupe 60000 images de chiffres manuscrits et 10000 images de test. Ce
+sont des matrices carrées ayant 28 pixels de côté, dont les valeurs sont
+des niveaux de gris allant de 0 à 255.
+
+\subsection{Lecture des données}\label{lecture-des-donnees}
+
+Les données sont accessibles depuis la librairie R \texttt{keras} qui
+les télécharge directement depuis l'url de dépot (il faut donc être
+connecté à internet pour réaliser le TP). Chaque donnée est représentée
+par un tableau 3d (\texttt{array}) contenant les informations (images,
+width, height) en niveaux de gris. Pour coder le vecteur \({\bf x}\),
+nous aurons besoin de vectoriser ces données. Pour ne pas se limiter aux
+tutoriaux disponibles sur le web, nous nous intéressons à la
+reconnaissance des chiffres \(2\) et 7.
+
+\begin{itemize}
+\tightlist
+\item
+  Lire les données MNIST. Il y a 4 ensembles de variables.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{library}\NormalTok{(keras)}
+  \KeywordTok{library}\NormalTok{(magrittr)}
+\NormalTok{  mnist <-}\StringTok{ }\KeywordTok{dataset_mnist}\NormalTok{()}
+\NormalTok{  x_train <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{x}
+\NormalTok{  y_train <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{y}
+\NormalTok{  x_test <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{x}
+\NormalTok{  y_test <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{y}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Filtrer les données correspondant aux chiffres \(2\) et 7. Commenter
+  et compléter le code suivant. Exécuter le code en changeant l'option
+  de chunck.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# comment 1}
+\NormalTok{  boo_train <-}\StringTok{ }\NormalTok{y_train }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}\StringTok{ }\NormalTok{y_train }\OperatorTok{==}\StringTok{ }\DecValTok{7} 
+\NormalTok{  x_train <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{x[boo_train,,]}
+\NormalTok{  y_train <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{y[boo_train]}
+
+\CommentTok{# comment 2}
+\NormalTok{  boo_test <-}\StringTok{ }\NormalTok{y_test }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}\StringTok{ }\NormalTok{y_test }\OperatorTok{==}\StringTok{ }\DecValTok{7}
+\NormalTok{  x_test <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{x[boo_test,,]}
+\NormalTok{  y_test <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{y[boo_test]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Utiliser la fonction \texttt{image()} pour visualiser le premier
+  chiffre test de la base de données réduite. C'est un 7.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{image}\NormalTok{(}\KeywordTok{t}\NormalTok{(x_test[}\DecValTok{1}\NormalTok{, }\DecValTok{28}\OperatorTok{:}\DecValTok{1}\NormalTok{,]), }\DataTypeTok{col =} \KeywordTok{grey.colors}\NormalTok{(}\DecValTok{5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ASDIA_Projet_1_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Les images de dimension 28x28 doivent être converties en vecteurs de
+  longueur 784 (\(= 28 \times 28\)). Cela peut se faire de plusieurs
+  manières. En particulier, la fonction \texttt{array\_reshape()} de
+  keras est très utile pour cela.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# reshape}
+\NormalTok{  x_train <-}\StringTok{ }\KeywordTok{array_reshape}\NormalTok{(x_train, }\KeywordTok{c}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(x_train), }\DecValTok{784}\NormalTok{))}
+\NormalTok{  x_test <-}\StringTok{ }\KeywordTok{array_reshape}\NormalTok{(x_test, }\KeywordTok{c}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(x_test), }\DecValTok{784}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Normaliser les données pour obtenir des valeurs réelles (flottants)
+  entre 0 et 1 en divisant les valeurs présentes par 255. Utiliser la
+  fonction \texttt{image()} pour visualiser le premier chiffre test de
+  la base de données réduite dans cette nouvelle représentation.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# rescale}
+\NormalTok{  x_train <-}\StringTok{ }\NormalTok{x_train}\OperatorTok{/}\DecValTok{255}
+\NormalTok{  x_test <-}\StringTok{ }\NormalTok{x_test}\OperatorTok{/}\DecValTok{255}
+
+\CommentTok{# le symbol %>% est similaire au 'pipe' d'unix (library(magrittr))}
+  \KeywordTok{dim}\NormalTok{(x_test)}
+\NormalTok{  x_test[}\DecValTok{1}\NormalTok{,] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{nrow =} \DecValTok{28}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\NormalTok{.[,}\DecValTok{28}\OperatorTok{:}\DecValTok{1}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{image}\NormalTok{(}\DataTypeTok{col =} \KeywordTok{grey.colors}\NormalTok{(}\DecValTok{5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Les données de classe sont des entiers 2,7. Convertir ces données en
+  variables booléennes ou binaires. La valeur 1 ou \texttt{TRUE}
+  correspondra à un 7.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  y_train <-}\StringTok{ }\NormalTok{y_train }\OperatorTok{==}\StringTok{ }\DecValTok{7}
+\NormalTok{  y_test <-}\StringTok{  }\NormalTok{y_test }\OperatorTok{==}\StringTok{ }\DecValTok{7}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Ajuster un réseau de neurone avec
+keras}\label{ajuster-un-reseau-de-neurone-avec-keras}
+
+\begin{itemize}
+\item
+  Construire un réseau de neurones à deux couches cachées à l'aide de la
+  fonction \texttt{keras\_model\_sequential()}, en faisant varier les
+  paramètres des couches comme ci-dessous. Définir les termes
+  apparaissant dans la construction du modèle.
+\item
+  Commenter et compléter le code suivant.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# commenter les lignes suivantes}
+\NormalTok{  model <-}\StringTok{ }\KeywordTok{keras_model_sequential}\NormalTok{() }
+\NormalTok{  model }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{256}\NormalTok{, }\DataTypeTok{activation =} \StringTok{'relu'}\NormalTok{, }\DataTypeTok{input_shape =} \DecValTok{784}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{layer_dropout}\NormalTok{(}\DataTypeTok{rate =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{128}\NormalTok{, }\DataTypeTok{activation =} \StringTok{'relu'}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{layer_dropout}\NormalTok{(}\DataTypeTok{rate =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{1}\NormalTok{, }\DataTypeTok{activation =} \StringTok{'sigmoid'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Donner un tableau de correspondance entre les notions mathématiques
+  introduites dans la section précédente et les termes apparaissant dans
+  la construction du modèle.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{terme <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"units = 256"}\NormalTok{, }\StringTok{"input_shape"}\NormalTok{)}
+\NormalTok{definition <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Dimension de la première couche cachée (W_2)"}\NormalTok{, }\StringTok{"A compléter"}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{(terme, definition)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         terme                                   definition
+## 1 units = 256 Dimension de la première couche cachée (W_2)
+## 2 input_shape                                  A compléter
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Compiler le modèle en précisant la fonction de perte (binary) et
+  demander de visualiser le taux de bonne classification (accuracy). Le
+  choix de l'optimiseur est spécifié.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# commenter et compléter les lignes suivantes  }
+\NormalTok{  model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}
+    \DataTypeTok{loss =} \StringTok{'also_sprach_zarathustra'}\NormalTok{,}
+    \DataTypeTok{optimizer =} \KeywordTok{optimizer_rmsprop}\NormalTok{(}\DataTypeTok{lr =} \FloatTok{0.001}\NormalTok{, }\DataTypeTok{rho =}\NormalTok{ O, }\DataTypeTok{decay =} \DecValTok{0}\NormalTok{),}
+    \DataTypeTok{metrics =} \KeywordTok{c}\NormalTok{(}\StringTok{'ex_nihilo_nihil'}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Donner un tableau de correspondance entre les notions mathématiques
+  introduites dans la section précédente et les termes apparaissant dans
+  la compilation du modèle.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{terme <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"loss"}\NormalTok{, }\StringTok{"optimizer"}\NormalTok{, }\StringTok{"lr"}\NormalTok{, }\StringTok{"rho"}\NormalTok{, }\StringTok{"decay"}\NormalTok{, }\StringTok{"accuracy"}\NormalTok{)}
+\NormalTok{definition <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"A compléter"}\NormalTok{,}\StringTok{""}\NormalTok{,}\StringTok{""}\NormalTok{,}\StringTok{""}\NormalTok{,}\StringTok{""}\NormalTok{,}\StringTok{""}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{(terme, definition)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       terme  definition
+## 1      loss A compléter
+## 2 optimizer            
+## 3        lr            
+## 4       rho            
+## 5     decay            
+## 6  accuracy
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Allons-y Alonso, pour ajuster le réseau (apprentissage)
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  history <-}\StringTok{ }\NormalTok{carpe_diem }\OperatorTok{%>%}\StringTok{ }\KeywordTok{fit}\NormalTok{(}
+\NormalTok{                        x_train, }
+\NormalTok{                        y_train, }
+                        \DataTypeTok{epochs =} \DecValTok{20}\NormalTok{, }
+                        \DataTypeTok{batch_size =} \DecValTok{128}\NormalTok{, }
+                        \DataTypeTok{validation_data =} \KeywordTok{list}\NormalTok{(x_test, y_test)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  Donner un tableau de correspondance entre les notions mathématiques
+  introduites dans la section précédente et les termes apparaissant dans
+  l'apprentissage du modèle.
+\item
+  Quelle est signification des courbes \texttt{loss} et
+  \texttt{val\_loss} que l'on voit tracées.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(history)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Evaluer le modèle sur les données de test (erreur de classification et
+  perte log loss)
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{ex_nihilo_nihil}\NormalTok{(x_test, y_test)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Donner une matrice de confusion pour les classements effectués par le
+  modèle sur le jeu test
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# help(table)}
+\NormalTok{pred_class <-}\StringTok{ }\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{predict_classes}\NormalTok{(x_test)}
+\KeywordTok{quod_errat_demonstratum}\NormalTok{(}\DataTypeTok{predicted =}\NormalTok{ pred_class, }\DataTypeTok{observed =}\NormalTok{ mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{y[boo_test])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Montrer deux chiffres manuscrits que la machine n'a pas réussi à
+  classer correctement. Donner la liste des mal classés et les
+  probabilités de classement pour chacune des erreurs.
+\end{itemize}
+
+\subsection{Défi MNIST}\label{defi-mnist}
+
+Pour les données de l'exercice précédent, répondre aux questions
+suivantes.
+
+\begin{itemize}
+\tightlist
+\item
+  Reporter dans un tableau 6x2 (\texttt{data.frame}), puis dans deux
+  diagrammes en barres (\texttt{barplot}), les valeurs des erreurs de
+  classification et de \emph{logloss} obtenues sur l'ensemble test pour
+  6 réseaux de neurones distincts dont on aura fait varier les
+  paramètres de la manière suivante
+\item
+  nombre de couches cachées : 1 ou 5,
+\item
+  nombre de neurones par couche cachée : 10 ou 100,
+\item
+  valeur de \texttt{dropout} par couche cachée : 0.2 ou 0.8.
+\end{itemize}
+
+Inclure dans tableau une colonne indiquant le nom de chaque modele. Par
+exemple, un modèle à 5 couches cachées, 10 neurones par couche et une
+valeur ``dropout'' de 0.2 pourra s'appeler ``modele\_5\_10\_2''
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{paste}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"modele"}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{), }\DataTypeTok{collapse =} \StringTok{"_"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "modele_5_10_2"
+\end{verbatim}
+
+\begin{itemize}
+\item
+  Quel modèle de prédiction vous parait être le meilleur ?
+\item
+  Donner la liste des chiffres mal classés et les probabilités de
+  classement pour chacune des erreurs.
+\end{itemize}
+
+\section{Partie 3 : Analyse de critiques de films
+(IMDB)}\label{partie-3-analyse-de-critiques-de-films-imdb}
+
+L'objectif de cette séance est de répondre à un défi de classification
+portant sur l'analyse d'opinion à partir de documents textuels
+(``natural language processing'').
+
+Les documents analysés sont des critiques de films écrites par des
+utilisateurs du site web ``Internet Movie Data Base'' (IMDB). À chaque
+critique est associée une note donnée par l'utilisateur du site. Seules
+les notes extrêmes ont été conservées et converties en valeurs binaires
+représentant des opinions positives ou négatives envers le film.
+
+La base de données comporte 50000 critiques de films. Chaque document
+est prétraité et représenté sous le format d'un \emph{sac de mots}
+(``bag of words'') pour en faciliter l'analyse. Un sac de mots peut être
+vu comme une représentation des termes d'un document partir des
+fréquences d'occurrence des mots dans la base IMDB.
+
+Dans cette séance de TP, nous téléchargerons un échantillon de la base
+de données et constituerons un sous-échantillon comportant 10000
+documents annotés. Chaque document est associé à une évaluation
+traduisant une opinion positive (valeur 0) ou négative (valeur 1) des
+utilisateurs.
+
+Le but de ce TP est de prédire le mieux possible l'opinion ou le
+\emph{sentiment} des utilisateurs à partir des fréquences d'occurrence
+de certains termes apparaissant dans les textes. Un échantillon de test
+comportant 5000 critiques indépendantes sera utilisé par l'enseignant
+pour évaluer la méthode sélectionnée dans le défi final.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(magrittr)}
+\KeywordTok{library}\NormalTok{(keras)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Index des termes et sacs de
+mots.}\label{index-des-termes-et-sacs-de-mots.}
+
+À chaque terme d'un texte (aussi appelé \emph{document}) est associé une
+fréquence d'apparition globale dans la base de données IMDB. Les termes
+sont référencés dans un index à l'aide d'un nombre indiquant leur rang
+d'apparition dans la base de données. Dans l'index, les termes sont
+triés du plus fréquent au moins fréquent.
+
+L'index peut être consulté à partir de la bibliothèque \texttt{keras},
+sous forme de liste dont les attributs sont les termes utilisés dans la
+base de données. Pour cela, on utlise la fonction
+\texttt{dataset\_imdb\_word\_index()}. L'index est illustré ci-dessous.
+
+Le numéro trouvé dans l'index correspond au rang d'un terme donné. Pour
+trouver le mot le plus fréquemment utilisé dans l'IMDB, on peut chercher
+le terme dont la valeur est égale au rang 1. L'index contient aussi
+quatres valeurs spéciales (start, pad, unknown, unused).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  index <-}\StringTok{ }\NormalTok{keras}\OperatorTok{::}\KeywordTok{dataset_imdb_word_index}\NormalTok{()}
+  \KeywordTok{names}\NormalTok{(index[index }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "the"
+\end{verbatim}
+
+Sans surprise, le terme le plus fréquemment utilisé est l'article
+``the''. Sa valeur dans l'index est donc égale à 1.
+
+L'article ``the'' se retrouve à la position 85976 dans l'index. L'index
+n'est donc pas ordonné par la fréquence des termes, mais par une
+permutation. Nous pouvons utiliser la fonction \texttt{order()} pour
+réordonner l'index et trouver les 10 termes les plus utilisés dans
+l'ensemble des critiques de films.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  o <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(index) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{order}\NormalTok{()}
+\NormalTok{  index[o[}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{]] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{names}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "the" "and" "a"   "of"  "to"  "is"  "br"  "in"  "it"  "i"
+\end{verbatim}
+
+Nous voyons qu'il s'agit d'articles, de prépositions ou de termes
+non-informatifs, comme par exemple, des éléments extraits des balises
+html (br). Il sera peut-être préférable d'éliminer les termes les plus
+utilisés. L'entrée 49 correspondant au terme ``good''.
+
+Pour réduire le temps de calcul, nous conservons uniquement les 5000
+termes les plus fréquents. Dans la suite, chaque document sera
+représenté par une suite de fréquences de termes représentés par les
+codes de l'index. Le jeu de données résultant de cette étape est nommé
+\texttt{imbd}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  imbd <-}\StringTok{  }\NormalTok{keras}\OperatorTok{::}\KeywordTok{dataset_imdb}\NormalTok{(}\DataTypeTok{path =} \StringTok{"imdb.npz"}\NormalTok{,}
+                              \DataTypeTok{num_words =} \DecValTok{5048}\NormalTok{,}
+                              \DataTypeTok{skip_top =} \DecValTok{49}\NormalTok{,}
+                              \DataTypeTok{oov_char =} \OperatorTok{-}\DecValTok{2}\NormalTok{,}
+                              \DataTypeTok{start_char =} \OperatorTok{-}\DecValTok{1}\NormalTok{,}
+                              \DataTypeTok{index_from =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Les données enregistrées dans l'objet \texttt{imbd} se présentent sous
+la forme de listes de documents (train et test). On utilisera les
+``double-crochets'' ou le symbole dollar pour accéder aux attributs de
+ces listes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{summary}\NormalTok{(imbd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       Length Class  Mode
+## train 2      -none- list
+## test  2      -none- list
+\end{verbatim}
+
+Par exemple le document numéro 12 dans l'ensemble d'apprentissage est lu
+de la manière suivante.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  document <-}\StringTok{ }\NormalTok{imbd}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{x[[}\DecValTok{12}\NormalTok{]]}
+\NormalTok{  document}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]   -2   51   -2 1607   -2   -2   -2   66   52  361 1395   -2   51   -2
+## [15]  216   -2   -2 1703   -2   -2   -2   -2  326   -2  173  326   71   -2
+## [29]   -2  870   -2  153   68   75   -2   -2  319   -2   -2   -2   -2  246
+## [43]   -2   62   -2   -2  376   -2   97  154   -2   -2  907   -2  546   -2
+## [57]   -2 1493   -2   -2   -2   -2   -2   -2  209   -2   -2   -2 1319  988
+## [71]   -2 2999   -2  422   -2   70 2215  546   -2   -2  152   -2   97  760
+## [85]  376   -2  100  348   -2   -2  199   -2 2238   -2   -2  317   -2   -2
+## [99]  454
+\end{verbatim}
+
+Nous voyons que le terme d'indice -2 est fréquent. Après filtrage, il
+correspond en fait à la chaîne de caractères \textbf{UNK} signifiant
+unknown. Cette chaîne apparait car nous nous sommes restreint à un
+dictionnaire de 5000 mots.
+
+Les fréquences des termes apparaissant dans le document 12 peuvent être
+données par la fonction \texttt{table()}. Cette fonction utilise l'ordre
+alphabétique pour représenter les comptages de chaque terme.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{table}\NormalTok{(}\KeywordTok{sapply}\NormalTok{(document[document }\OperatorTok{>}\StringTok{ }\OperatorTok{-}\StringTok{ }\DecValTok{2}\NormalTok{], }\DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{names}\NormalTok{(index[index }\OperatorTok{==}\StringTok{ }\NormalTok{x])))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##            0            5       actors          add        after 
+##            1            1            1            1            1 
+##          bad       chosen       comedy        could         dead 
+##            1            1            1            2            1 
+##       disney       except expectations     expected         give 
+##            1            2            1            1            1 
+##          had         half    laughable         less          lot 
+##            1            1            1            2            1 
+##          low  masterpiece      murders     realized       rented 
+##            1            1            1            1            1 
+##          saw        story       stupid    stupidity         than 
+##            1            1            2            1            1 
+##        thing        title         very         well         were 
+##            1            1            1            1            1 
+##         when         wife         work        worst 
+##            2            1            1            1
+\end{verbatim}
+
+Le document 12 contient des termes plutôt négatifs. Il est associé à une
+opinion négative (valeur 0). Cela se vérifie en affichant la variable
+\(y\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  imbd}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{y[}\DecValTok{12}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+Pour la suite, c'est à vous de jouer. Pour ne pas entrer dans les
+subtilités du traitement du langage, nous nous appuierons sur un codage
+simplifié des textes basé sur les fréquences des mots de l'index
+(one-hot encoding). Pour un encodage par `embeddings', une méthode
+particulièrement dédiée à l'analyse de texte, on peut trouver des
+solutions sur le web.
+
+\subsection{\texorpdfstring{Défi ``analyse de
+sentiments''}{Défi analyse de sentiments}}\label{defi-analyse-de-sentiments}
+
+\subsubsection{Lecture des données}\label{lecture-des-donnees-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Ecrire une ligne de commande R permettant convertir le document 12 en
+  un vecteur de longueur 5000, indiquant le nombre d'apparition de
+  chacun des indices allant de 1 à 5000 dans ce document.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \CommentTok{# comment 1}
+  \KeywordTok{help}\NormalTok{(sapply)}
+\NormalTok{  result <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(}\DecValTok{49}\OperatorTok{:}\DecValTok{5048}\NormalTok{, }\DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x) cogito_ergo_sum)}
+\NormalTok{  result[}\DecValTok{1}\OperatorTok{:}\DecValTok{100}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Constituer un jeu de données comportant 10000 documents choisis pour
+  moitié dans l'ensemble ``train'' et pour moitié dans l'ensemble
+  ``test'' de l'IMBD. Techniquement nous le constituerons en 20 étapes,
+  pour limiter l'impact sur la mémoire. Commenter et exécuter le code
+  suivant
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x_imbd <-}\StringTok{ }\OtherTok{NULL}
+
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)\{}
+    
+\NormalTok{    x_imbd_}\DecValTok{500}\NormalTok{ <-}\StringTok{ }\OtherTok{NULL}
+    
+      \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in}\NormalTok{ (}\DecValTok{500}\OperatorTok{*}\NormalTok{(i}\OperatorTok{-}\DecValTok{1}\NormalTok{)}\OperatorTok{+}\DecValTok{1}\NormalTok{)}\OperatorTok{:}\NormalTok{(}\DecValTok{500}\OperatorTok{*}\NormalTok{i))\{}
+        
+        \CommentTok{# comment 1}
+        
+\NormalTok{        doc_temp <-}\StringTok{ }\NormalTok{imbd}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{x[[j]]}
+\NormalTok{        x_imbd_}\DecValTok{500}\NormalTok{ <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(x_imbd_}\DecValTok{500}\NormalTok{, }
+                         \KeywordTok{sapply}\NormalTok{(}\DecValTok{49}\OperatorTok{:}\DecValTok{5048}\NormalTok{, }
+                                \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(ind) }\KeywordTok{sum}\NormalTok{(doc_temp }\OperatorTok{==}\StringTok{ }\NormalTok{ind)))}
+        
+        \ControlFlowTok{if}\NormalTok{ (j}\OperatorTok{%%}\DecValTok{500} \OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\KeywordTok{print}\NormalTok{(j) }\CommentTok{# ca rassure}
+\NormalTok{    \}}
+\NormalTok{    x_imbd <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(x_imbd, x_imbd_}\DecValTok{500}\NormalTok{)}
+\NormalTok{  \}}
+
+ \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)\{}
+   
+\NormalTok{    x_imbd_}\DecValTok{500}\NormalTok{ <-}\StringTok{ }\OtherTok{NULL}
+    
+      \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in}\NormalTok{ (}\DecValTok{500}\OperatorTok{*}\NormalTok{(i}\OperatorTok{-}\DecValTok{1}\NormalTok{)}\OperatorTok{+}\DecValTok{1}\NormalTok{)}\OperatorTok{:}\NormalTok{(}\DecValTok{500}\OperatorTok{*}\NormalTok{i))\{}
+        
+        \CommentTok{# comment 2}
+        
+\NormalTok{        doc_temp <-}\StringTok{ }\NormalTok{imbd}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{x[[j]]}
+\NormalTok{        x_imbd_}\DecValTok{500}\NormalTok{ <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(x_imbd_}\DecValTok{500}\NormalTok{, }
+                         \KeywordTok{sapply}\NormalTok{(}\DecValTok{49}\OperatorTok{:}\DecValTok{5048}\NormalTok{, }
+                                \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(ind) }\KeywordTok{sum}\NormalTok{(doc_temp }\OperatorTok{==}\StringTok{ }\NormalTok{ind)))}
+        
+        \ControlFlowTok{if}\NormalTok{ (j}\OperatorTok{%%}\DecValTok{500} \OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\KeywordTok{print}\NormalTok{(j) }\CommentTok{# ca rassure}
+\NormalTok{    \}}
+\NormalTok{    x_imbd <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(x_imbd, x_imbd_}\DecValTok{500}\NormalTok{)}
+\NormalTok{  \}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  Que contient l'objet \texttt{x\_imbd} ?
+\item
+  Définir les classes \(y = 0\) ou \(y=1\) pour chaque élément de
+  \texttt{x\_imbd}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  y_imbd <-}\StringTok{ }\KeywordTok{c}\NormalTok{(imbd}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{y[}\DecValTok{1}\OperatorTok{:}\DecValTok{5000}\NormalTok{], imbd}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{y[}\DecValTok{1}\OperatorTok{:}\DecValTok{5000}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+Et voilà. On est en pleine forme et on dispose d'une base
+d'apprentissage comportant les fréquences d'apparition des mots de
+l'index pour 10000 documents (\texttt{x\_imbd}) et les opinions des
+utilisateurs \texttt{y\_imbd}. Le défi peut vraiment commencer.
+
+\paragraph{Etude d'association}\label{etude-dassociation}
+
+Le but d'une étude d'association est d'identifier les termes les plus
+associés aux opinions positives ou négatives des utilisateurs. Pour
+cela, nous evaluons la correlation au carré entre l'occurrence de chaque
+terme et l'opinion de l'utilisateur (présence d'un 1). Il se peut que
+certaines valeurs de corrélation ne soient pas calculables à cause d'un
+écart-type nul.
+
+\begin{itemize}
+\tightlist
+\item
+  Calculer le coefficient de corrélation au carré entre les fréquences
+  d'apparition des termes de l'index et opinion des utilsateurs (5000
+  valeurs).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \CommentTok{# comment}
+\NormalTok{  x <-}\StringTok{ }\NormalTok{x_imbd}
+  
+  \CommentTok{# comment}
+\NormalTok{  y <-}\StringTok{ }\NormalTok{y_imbd}
+  
+  \CommentTok{# comment}
+\NormalTok{  r <-}\StringTok{ }\NormalTok{find_me}
+\NormalTok{  r2 <-}\StringTok{ }\NormalTok{r}\OperatorTok{^}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Montrer les termes dont la valeur d'association \(r^2\) est supérieure
+  à 3 pour cent (0.02), puis supérieure à 0.02, et à 0.01. \emph{Note} :
+  Il faut effectuer un décalage de 48 indices dans l'index pour trouver
+  le codage correct.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \CommentTok{# quelque chose à changer}
+\NormalTok{  index[o[ }\KeywordTok{which}\NormalTok{(r2 }\OperatorTok{>}\StringTok{ }\FloatTok{0.02}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{48}\NormalTok{ ]] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{names}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Dans quelles proportions les termes de valeur d'association \(r^2\)
+  supérieure à 0.02 apparaissent-ils dans les documents ? Représenter
+  graphiquement ces proportions à l'aide d'un diagramme en barre.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Calculer la frequence des termes realisant la condition}
+\NormalTok{  freq <-}\StringTok{ }\NormalTok{x[, conditio_logicae ] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{apply}\NormalTok{(}\DecValTok{2}\NormalTok{, mean) }
+
+\CommentTok{# mots dans l'index et barplot}
+  \KeywordTok{names}\NormalTok{(freq) <-}\StringTok{  }\NormalTok{index[o[}\KeywordTok{which}\NormalTok{(r2 }\OperatorTok{>}\StringTok{ }\FloatTok{0.02}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{48}\NormalTok{]] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{names}\NormalTok{() }
+  \KeywordTok{barplot}\NormalTok{(}\KeywordTok{sort}\NormalTok{(freq, }\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{), }\DataTypeTok{col =} \StringTok{"lightblue"}\NormalTok{, }\DataTypeTok{las =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Dans quelles proportions les termes de valeur d'association \(r^2\)
+  supérieure à 0.02 apparaissent-ils dans les documents ? Représenter
+  graphiquement ces proportions à l'aide d'un diagramme en barre.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  yes_we_can}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Dans quelles proportions les termes de valeur d'association
+  \(r = cor(x,y)\) supérieure à 0.1 apparaissent-ils dans les documents
+  ? Représenter graphiquement ces proportions à l'aide d'un diagramme en
+  barre.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  yes_we_can}
+  \KeywordTok{barplot}\NormalTok{(}\KeywordTok{sort}\NormalTok{(freq, }\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{), }\DataTypeTok{col =} \StringTok{"pink"}\NormalTok{, }\DataTypeTok{las =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Dans quelles proportions les termes de valeur d'association \(r\)
+  inférieure à \(-0.1\) apparaissent-ils dans les documents ?
+  Représenter graphiquement ces proportions à l'aide d'un diagramme en
+  barre.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  i_have_a_dream}
+  \KeywordTok{barplot}\NormalTok{(}\KeywordTok{sort}\NormalTok{(freq, }\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{), }\DataTypeTok{col =} \StringTok{"palegreen"}\NormalTok{, }\DataTypeTok{las =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\paragraph{Modèles d'apprentissage}\label{modeles-dapprentissage}
+
+\begin{itemize}
+\item
+  `A l'aide des outils de \emph{keras}, ajuster des modèles
+  d'apprentissage aux données contenues dans le défi : ``x\_imbd'' et
+  ``y\_imbd''. Considérer la graine du générateur aléatoire
+  \texttt{seed} comme un hyper-paramètre (\texttt{set.seed(seed)}).
+\item
+  Dans un tableau, décrire les performances de 6 méthodes choisies pour
+  des échantillons d'apprentissage et de test que vous aurez créés
+  vous-mêmes à partir des données ``x\_imbd'' et ``y\_imbd''. Les
+  performances seront mesurées par les erreurs de classification et
+  d'entropie croisée (log loss).
+\item
+  Donner le code R correspondant au meilleur modèle que vous avez ajusté
+  (chunk ci-dessous). On considèrera la graine du générateur aléatoire
+  comme un hyperparamètre supplémentaire du modèle. Donner la valeur
+  finale d'entropie croisée estimée sur votre ensemble test. On fera en
+  sorte que le résulat soit complètement reproductible à partir du code
+  proposé.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# code de mon meilleur modèle}
+\CommentTok{# Ne pas oublier d'inclure la seed du générateur aléatoire }
+\CommentTok{# set.seed(seed = 5427381)}
+\NormalTok{  model <-}\StringTok{  }\NormalTok{deus_ex_machina}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Règles de rendu}\label{regles-de-rendu}
+
+\begin{itemize}
+\item
+  Ce projet donne lieu à un compte rendu séparé, dans lequel on aura
+  pris soin de reporter les sections de ce document comportant vos
+  réponses, commentaires, et vos codes complétés. Merci de ne pas
+  reporter les sections ``théoriques''.
+\item
+  Les codes R doivent être inclus dans le texte du compte-rendu (menu
+  \textbf{Insert}) et l'ensemble doit être commenté avec précision.
+  \textbf{Les commentaires compteront pour une part importante dans la
+  note}.
+\item
+  Le compte-rendu doit être déposé \textbf{dans TEIDE}.
+\item
+  Le compte-rendu doit être déposé \textbf{au format HTML uniquement} et
+  intitulé ``Rendu\_Projet\_1.html''. Utiliser la fonction
+  \textbf{knitr} du menu de rstudio pour obtenir le document au format
+  souhaité. \textbf{Les fichiers sources (Rmd ou nb.html) ne seront pas
+  acceptés}.
+\end{itemize}
+
+
+\end{document}
