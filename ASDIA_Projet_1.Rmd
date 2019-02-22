@@ -63,7 +63,33 @@ $$
 
 
 * Démontrer le théorème. 
+Calculons la vraisemblance:
 
+$$
+\mathcal{L}(\theta, (x_1, y_1), ... , (x_n, y_n))) = \prod_{i=1}^np(y_i|x_i, \theta)
+$$
+Or, on a les probabilités suivantes:
+$$
+p(y_i=0|x_i, \theta) = 1-p(y_i = 1|x_i, \theta)\\
+p(y_i=1|x_i, \theta) = q(x_i, \theta)
+$$
+
+On peut résumer ces deux égalités ainsi:
+$$
+p(y_i|x_i, \theta)=(1-y_i)(1-q(x_i, \theta))+y_iq(x_i, \theta)
+$$
+
+D'où:
+$$
+\begin{align}
+\mathcal{L}(\theta, (x_1, y_1), ... , (x_n, y_n))) &= \prod_{i=1}^n(1-y_i)(1-q(x_i, \theta))+y_iq(x_i, \theta)\\
+\ln\mathcal{L}(\theta, (x_1, y_1), ... , (x_n, y_n))) &= \sum_{i=1}^n\ln((1-y_i)(1-q(x_i, \theta))+y_iq(x_i, \theta))
+\end{align}
+$$
+Cas 1 : $y_i = 0$. Alors le terme à l'intérieur de la somme prend la valeur $\ln(1-q(x_i, \theta))$.\ Cas 2: $y_i = 1$. Alors le terme vaut $q({x_i}, \theta)$.
+Dans les deux cas, on retrouve la valuer de $L(q(x_i, \theta))$, ie la fonction de perte.
+
+On a finalement $\sum_{i=1}^nL(q(x_i, \theta)) = -\ln(\mathcal{L}(\theta, (x, y))$. D'où le résultat.
 On a la formule suivante:
 $$
 \mathbb{E}[L(q({\bf x}), y)|x] = h(p_Y(.|{\bf x}), q_.({\bf x}))
