@@ -63,6 +63,37 @@ $$
 
 
 * Démontrer le théorème. 
+
+On a la formule suivante:
+
+$$
+\mathbb{E}[L(q({\bf x}), y)|x] = h(p_Y(.|{\bf x}), q_.({\bf x}))
+$$
+
+avec $q_.({\bf x})$ la loi de Bernouilli de paramètre $q({\bf x})$. Or, on peut remarquer que $p_Y(.|x)$ suit la loi de Bernouilli de paramètre $q_{opt}$. Ainsi, on peut poser l'égalité suivante:
+
+$$
+\begin{align}
+\mathbb{E}[L(q_{opt}({\bf x}), y)|{\bf x}] &= h(p_Y(.|x), p_Y(.|x))\\
+&=h(p_Y(.|x))
+\end{align}
+$$
+
+Or, on a montré l'inégalité suivante:$h(p, p') \geq h(p)$.
+
+Ainsi, $h(p_Y(.|{\bf x}), q_.({\bf x})) \geq h(p_Y(.|x))$.
+
+Donc,
+$\mathbb{E}(L(q_.({\bf x}, y))| {\bf x}) \geq \mathbb{E(L(q_{opt}({\bf x}, y))|{\bf x})}$.\
+
+Or, on sait que $p(x) \geq 0$.
+
+Ainsi, en multipliant les deux membres de l'inégalité ci-dessus, et en intégrant sur le domaine de définition de x, on obtient le résultat voulu :
+$$
+\mathbb{E}(L(q({\bf x}), y))\geq  \mathbb{E}(L(q_{opt}({\bf x}), y))
+$$
+
+ 
 Calculons la vraisemblance:
 
 $$
@@ -90,37 +121,6 @@ Cas 1 : $y_i = 0$. Alors le terme à l'intérieur de la somme prend la valeur $\
 Dans les deux cas, on retrouve la valuer de $L(q(x_i, \theta))$, ie la fonction de perte.
 
 On a finalement $\sum_{i=1}^nL(q(x_i, \theta)) = -\ln(\mathcal{L}(\theta, (x, y))$. D'où le résultat.
-On a la formule suivante:
-$$
-\mathbb{E}[L(q({\bf x}), y)|x] = h(p_Y(.|{\bf x}), q_.({\bf x}))
-
-$$
-
-avec $q_.({\bf x})$ la loi de Bernouilli de paramètre $q({\bf x})$. Or, on peut remarquer que $p_Y(.|x)$ suit la loi de Bernouilli de paramètre $q_{opt}$. Ainsi, on peut poser l'égalité suivante:
-
-$$
-\begin{align}
-\mathbb{E}[L(q_{opt}({\bf x}), y)|{\bf x}] &= h(p_Y(.|x), p_Y(.|x))\\
-&=h(p_Y(.|x))
-\end{align}
-$$
-
-Or, on a montré l'inégalité suivante:$h(p, p') \geq h(p)$.
-
-Ainsi, $h(p_Y(.|{\bf x}), q_.({\bf x})) \geq h(p_Y(.|x))$.
-
-Donc,
-\mathbb{E}(L(q_.({\bf x}, y))| {\bf x}) \geq \mathbb{E(L(q_{opt}({\bf x}, y))|{\bf x})}.\
-
-Or, on sait que $p(x) \geq 0$.
-
-Ainsi, en multipliant les deux membres de l'inégalité ci-dessus, et en intégrant sur le domaine de définition de x, on obtient le résultat voulu :
-$$
-\mathbb{E}(L(q({\bf x}), y))\geq  \mathbb{E}(L(q_{opt}({\bf x}), y))
-$$
-
-*Démontrer que le minimum de la fonction de perte correspond au maximum de la vraisemblance pour ce modèle. 
-
 
 # Partie 2 : Reconnaissance de chiffres manuscrits (2 et 7)
 
