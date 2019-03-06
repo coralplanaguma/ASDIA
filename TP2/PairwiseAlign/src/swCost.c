@@ -10,22 +10,22 @@
   declare static functions
  *******************************/
 
-/* 
+/*
    simple DNA substitution cost: +5 for match, -4 for mismatch
 */
 static double dnaSubst(char x,char y) ;
 
 
 /*
-  Return the score of the x<->y protein substitution according to 
+  Return the score of the x<->y protein substitution according to
   the BLOSUM62 matrix.
   Precondition: x and y are uppercase letters representing amino acids.
 */
 static double protSubstBlosum62(char x,char y) ;
 
-/* 
-   set the cost for the x<->y protein substitution in mat. 
-   The convention is that this cost is stored at 
+/*
+   set the cost for the x<->y protein substitution in mat.
+   The convention is that this cost is stored at
    mat[x-'A' +  26*(y-'A')] , where
   x and y must be uppercase letters representing amino acids.
  */
@@ -59,7 +59,7 @@ static double protSubstBlosum62(char x,char y)
 	   later we just need to lookup the subst cost in the matrix */
 	static double blosum62[26*26] = {DBL_MAX} ;
 	if (blosum62[0] == DBL_MAX) {
-		/* this is the first call to this function, blosum62 has not 
+		/* this is the first call to this function, blosum62 has not
 		   been initialized yet, do it */
 		fillBlosum62(blosum62) ;
 	}
@@ -73,7 +73,7 @@ static double protSubstBlosum62(char x,char y)
 
 static void fillCost(double *mat, char x, char y, double cost) {
 	mat[x-'A' +  26*(y-'A')] = cost;
-	if (x != y) 
+	if (x != y)
 		mat[y-'A' +  26*(x-'A')] = cost;
 }
 
@@ -83,7 +83,7 @@ static void fillBlosum62(double *mat)
 	for (int i = 0; i < 26; i++)
 		for (int j = 0; j < 26; j++)
 			mat[i+26*j] = DBL_MAX;
-	
+
 	/* now fill costs for actual amino acids */
 	fillCost(mat,'C','C',9);
 	fillCost(mat,'C','S',-1);
