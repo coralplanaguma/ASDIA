@@ -1,1 +1,0 @@
-swOut.o: swOut.c
