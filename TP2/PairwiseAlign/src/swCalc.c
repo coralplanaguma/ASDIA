@@ -97,7 +97,7 @@ void swFillMat(struct matrix *mat, struct cost *cost, char *s1, char *s2){
         score[1] = mat->cells[i*w + j-1].score + cost->indelOpen;
         // top
         score[2] = mat->cells[(i-1)*w+j].score + cost->indelOpen;
-
+        }
         for(unsigned int i=0; i<3; i++){
           if (score[i] > max){
             max = score[i];

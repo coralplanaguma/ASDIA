@@ -1,4 +1,4 @@
-#include <stdio.h> 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "swCost.h"
@@ -21,8 +21,9 @@ int main(void)
 	struct matrix *mat = swInitMat(s1,s2);
 	swFillMat(mat,cost,s1,s2);
 	/* for debugging you can uncomment:*/
-	swPrintMat(mat, s1, s2); 
-	//printBestAlis(mat,cost,s1,s2);
+	//swPrintMat(mat, s1, s2);
+	maxIndex(mat);
+	printBestAlis(mat,s1,s2);
 
 	swFreeMat(mat);
 	free(cost);
