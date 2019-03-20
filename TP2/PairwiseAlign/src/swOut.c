@@ -75,9 +75,9 @@ int **maxIndex(struct matrix *mat){
   }
   int maxIndex = 0;
   int **index = NULL;
-  index = malloc(maxNumber*sizeof(int*));
+  index = malloc((maxNumber + 1)*sizeof(int*));
   for(int i = 0; i <maxNumber; i++){
-    index[i] = malloc(2*sizeof(int));
+    index[i] = malloc(2*sizeof(unsigned int));
   }
   for(unsigned int i = 0; i < mat->h; i++){
     for(unsigned int j = 0; j < mat->w; j++){
@@ -86,6 +86,7 @@ int **maxIndex(struct matrix *mat){
         index[maxIndex][1] = j;
         //printf("le max num %d est: (%d,%d)\n", maxIndex, i,j);
         maxIndex++;
+        index[maxIndex] = NULL;
       }
     }
   }
