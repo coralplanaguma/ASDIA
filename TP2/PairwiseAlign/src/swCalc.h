@@ -22,13 +22,13 @@ struct cell {
 	uint8_t prevs;
 };
 
+
 struct matrix {
 	unsigned int w;
 	unsigned int h;
 	struct cell *cells; /* pointer to array of w*h cells
 			       cells[w*i+j] contains cell (i,j) */
 };
-
 
 
 /* allocate and initialize (first row and col) a matrix for SW
@@ -50,5 +50,10 @@ void swFreeMat(struct matrix *mat);
 
 /* print contents of matrix, for debugging */
 void swPrintMat(struct matrix *mat, char *s1, char *s2);
+
+void assignMaxScore(struct matrix* mat, double* score, uint8_t prevs, unsigned int i, unsigned int j);
+
+void swFillMatAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix *mat_h, struct cost *cost, char *s1, char *s2);
+
 
 #endif

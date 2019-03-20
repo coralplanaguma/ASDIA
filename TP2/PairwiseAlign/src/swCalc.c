@@ -114,3 +114,69 @@ void swFillMat(struct matrix *mat, struct cost *cost, char *s1, char *s2){
   }
 }
 
+
+/*Fill the matrix using Altschul & Erickson algorithm*/
+void swFillMatAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix *mat_h, struct cost *cost, char *s1, char *s2){
+  unsigned int w = mat_d->w;
+  double* score_d = malloc(3*sizeof(double));
+  double* score_v = malloc(3*sizeof(double));
+  double* score_h = malloc(3*sizeof(double));
+  uint8_t prevs_d = 0;
+  uint8_t prevs_v = 0;
+  uint8_t prevs_h = 0;
+  for(unsigned int  i = 1; i < mat_d->h; i++){
+    for(unsigned int  j = 1; j < mat_d->w; j++){
+        prevs_d = 0;
+        prevs_v = 0;
+        prevs_h = 0;
+
+        /*Remplissage de D*/
+        // diag
+        score_d[0] = mat_d->cells[(i-1)*w+ j-1].score + cost->subst(s1[j-1], s2[i-1]);
+        // vertical
+        score_d[1] = mat_v->cells[(i-1)*w + (j-1)].score + cost->subst(s1[j-1], s2[i-1]);
+        // horizontal
+        score_d[2] = mat_h->cells[(i-1)*w+(j-1)].score + cost->subst(s1[j-1], s2[i-1]);
+        
+        /* Remplissage de V*/ 
+        // diag
+        score_v[0] = mat_d->cells[(i-1)*w+ j].score + cost->indelOpen;
+        // vertical
+        score_v[1] = mat_v->cells[(i-1)*w + j].score + cost->indelExtend;
+        // horizontal
+        score_v[2] = mat_h->cells[(i-1)*w + j].score + cost->indelOpen;
+
+        /*Remplissage de H*/
+        // diag
+        score_h[0] = mat_d->cells[i*w+ (j-1)].score + cost->indelOpen;
+        // vertical
+        score_h[1] = mat_v->cells[i*w + (j-1)].score + cost->indelOpen;
+        // horizontal
+        score_h[2] = mat_h->cells[i*w + (j-1)].score + cost->indelExtend;
+
+        assignMaxScore(mat_d, score_d, prevs_d, i, j);
+        assignMaxScore(mat_v, score_v, prevs_v, i, j);
+        assignMaxScore(mat_h, score_h, prevs_h, i, j);
+    }
+    
+  }
+}
+
+
+void assignMaxScore(struct matrix* mat, double* score, uint8_t prevs, unsigned int i, unsigned int j) {
+  double max = 0;
+  unsigned int w = mat->w;
+
+  for(unsigned int k=0; k<3; k++){
+      if (score[k] > max){
+        max = score[k];
+        prevs = 1<<k;
+      } else {
+          if (score[k] == max){
+            prevs += 1<<k;
+          }
+        }
+      }
+  mat->cells[w*i+j].score = max;
+  mat->cells[w*i+j].prevs = prevs;
+}
