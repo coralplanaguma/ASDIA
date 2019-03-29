@@ -7,7 +7,7 @@
    cost is provided so mismatches with negative scores can be lowercased.
 */
 void printBestAlis(struct matrix *mat, char *s1, char *s2){
-  int **indexListe = maxIndex(mat);
+  unsigned int **indexListe = maxIndex(mat);
   int i =0;
   while(indexListe[i] != NULL){
     printf("le meilleur chemin ayant pour score %f pour la case (%d, %d) est :\n",mat->cells[indexListe[i][0]*mat->w+indexListe[i][1]].score, indexListe[i][0],indexListe[i][1]);
@@ -17,7 +17,7 @@ void printBestAlis(struct matrix *mat, char *s1, char *s2){
 }
 
 void printBestAlisAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix* mat_h, char *s1, char *s2){
-  int **indexListe = maxIndex(mat_d);
+  unsigned int **indexListe = maxIndex(mat_d);
   int i =0;
   while(indexListe[i] != NULL){
     printf("le meilleur chemin ayant pour score %f pour la case (%d, %d) est :\n",mat_d->cells[indexListe[i][0]*mat_d->w+indexListe[i][1]].score, indexListe[i][0],indexListe[i][1]);
@@ -28,7 +28,7 @@ void printBestAlisAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix*
 
 
 /*Smith-Waterman*/
-void printAlis(struct matrix *mat, char *s1, char *s2, int* index){
+void printAlis(struct matrix *mat, char *s1, char *s2, unsigned int* index){
   char c1[mat->w+mat->h+1];
   char c2[mat->w+mat->h+1];
   char * chaine1 = c1 + mat->w+mat->h;
@@ -69,7 +69,7 @@ void printAlis(struct matrix *mat, char *s1, char *s2, int* index){
 
 
 /*Altschul & Erickson*/
-void printAlisAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix *mat_h, char *s1, char *s2, int* index){
+void printAlisAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix *mat_h, char *s1, char *s2, unsigned int* index){
   uint8_t current_mat = 1;
   char c1[mat_d->w+mat_d->h+1];
   char c2[mat_d->w+mat_d->h+1];
@@ -123,7 +123,7 @@ void printAlisAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix *mat
 
 
 
-int **maxIndex(struct matrix *mat){
+unsigned int **maxIndex(struct matrix *mat){
   int max = 0;
   int maxNumber = 0;
   for(unsigned int i = 0; i < mat->h; i++){
@@ -133,14 +133,13 @@ int **maxIndex(struct matrix *mat){
         max = mat->cells[i*mat->w+j].score;
       }
       else if(mat->cells[i*mat->w+j].score == max){
-        maxNumber += 1;
+        maxNumber++;
       }
     }
   }
-  int maxIndex = 0;
-  int **index = NULL;
-  index = malloc((maxNumber + 1)*sizeof(int*));
-  for(int i = 0; i <maxNumber; i++){
+  unsigned int maxIndex = 0;
+  unsigned int **index = malloc((maxNumber+1)*sizeof(unsigned int *));
+  for(int i = 0; i <maxNumber+1; i++){
     index[i] = malloc(2*sizeof(unsigned int));
   }
   for(unsigned int i = 0; i < mat->h; i++){
@@ -150,9 +149,9 @@ int **maxIndex(struct matrix *mat){
         index[maxIndex][1] = j;
         //printf("le max num %d est: (%d,%d)\n", maxIndex, i,j);
         maxIndex++;
-        index[maxIndex] = NULL;
       }
     }
   }
+  index[maxIndex] = NULL;
   return index;
 }
