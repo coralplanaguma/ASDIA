@@ -84,7 +84,7 @@ void printAlisAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix *mat
     } else if((current_cell.prevs & 4) == 4){
       current_mat = 4;
     }
-    
+
     if ((current_mat & 1) ==1){
       current_cell = mat_d->cells[index[0]*mat_d->w+index[1]];
     } else if ((current_mat & 2) == 2){
@@ -95,7 +95,7 @@ void printAlisAlt(struct matrix *mat_d, struct matrix *mat_v, struct matrix *mat
       fprintf(stderr, "mauvaise matrice");
     }
 
-    
+
   }
   printf("chaine 1 : %s\nchaine 2 : %s\n\n", chaine1, chaine2);
 }
@@ -105,7 +105,7 @@ void maxIndex(struct matrix *mat, unsigned int* index){
   // finding coordinates of the highest score in the given matrix
   int max = 0;
   for (unsigned int i=0; i<mat->h; i++){
-    for (unsigned int j=0; j<mat->h; j++){
+    for (unsigned int j=0; j<mat->w; j++){
       if(mat->cells[i*mat->w+j].score > max){
         max = mat->cells[i*mat->w+j].score;
         index[0] = i;
