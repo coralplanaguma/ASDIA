@@ -26,7 +26,7 @@ int main(void)
 	swFillMatAlt(mat_d, mat_v, mat_h, cost, s1, s2);
 	/* for debugging you can uncomment:
 	   swPrintMat(mat); */
-	printBestAlisAlt(mat_d, mat_v, mat_h, s1, s2);
+	printAlisAlt(mat_d, mat_v, mat_h, s1, s2);
 
 	swFreeMat(mat_d);
 	swFreeMat(mat_v);

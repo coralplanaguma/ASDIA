@@ -6,13 +6,13 @@ OBJS = swCost.o mem.o swCalc.o swOut.o swGetSeq.o
 
 etu: swDnaLinear
 
-all: swDnaLinear swDnaAffine swDnaAffineLongGaps swProtAffine
+all: swDnaLinear swDnaAffineLongGaps swProtAffine
 
 swDnaLinear: swDnaLinear.o $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
-swDnaAffine: swDnaAffine.o $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^
+#swDnaAffine: swDnaAffine.o $(OBJS)
+#	$(CC) $(LDFLAGS) -o $@ $^
 
 swDnaAffineLongGaps: swDnaAffineLongGaps.o $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^

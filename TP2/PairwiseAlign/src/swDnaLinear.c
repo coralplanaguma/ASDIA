@@ -22,8 +22,7 @@ int main(void)
 	swFillMat(mat,cost,s1,s2);
 	/* for debugging you can uncomment:*/
 	//swPrintMat(mat, s1, s2);
-	maxIndex(mat);
-	printBestAlis(mat,s1,s2);
+	printAlis(mat,s1,s2);
 
 	swFreeMat(mat);
 	free(cost);
