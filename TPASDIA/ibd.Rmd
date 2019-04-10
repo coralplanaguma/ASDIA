@@ -1,0 +1,175 @@
+---
+title: "Asdia, predicting IBD from structure of the gut microbiome"
+author: "Clovis Galiez"
+date: "January 24, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+set.seed(42)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+We want to predict the IBD clinical status of patients given the abundance of microbial species living in their gut. curatedMetagenomicData package allows to retrieve a matrix of patients together with their gut's microbial composition. Each patient is assigned to a clinical status.
+
+We focus here on the metagenomic study by Nielsen H.B. et al, published in 2014.
+
+
+## Load/install packages
+```{r libs, include=FALSE}
+#install.packages('curatedMetagenomicData')
+#source('http://bioconductor.org/biocLite.R')
+#biocLite('phyloseq')
+#library(phyloseq)
+library(curatedMetagenomicData)
+library(ggplot2)
+```
+
+## Load the data
+
+```{r pressure, echo=FALSE}
+###########################
+# define study considered #
+###########################
+study = "NielsenHB_2014"
+  # create output dir
+output.dir = paste("./", study, sep = "")
+dir.create(output.dir, showWarnings = F)
+
+##########################
+# extract taxonomic data #
+##########################
+db = "metaphlan_bugs_list.stool"
+  #-----------#
+  # load data #
+  #-----------#
+cat("\t-loading taxonomic data data\n")
+data = curatedMetagenomicData( paste(study, db, sep = "."), dryrun = FALSE)
+data = data[[1]]
+  # get expression 
+X = exprs(data)
+X = t(X)
+  # get covariates
+meta = data@phenoData@data
+status = meta$study_condition
+status = factor(status)
+names_of_species = colnames(X)
+```
+
+Take a look to your data and understand what's in there.
+```{r}
+load('ibdStart.RData')
+# The most important variables for you are:
+dim(X)
+head(status)
+head(names_of_species)
+
+```
+
+## Predicting IBD
+
+
+### Identify important bacterial species
+
+Find potential correlations between abundances of bacterial species and IBD.
+
+```{r explainatory vars}
+z_and_o = as.numeric((status == "IBD")) # 1 if the personn is ill 
+o_and_z = abs(z_and_o - 1)
+C <- c()
+for (i in 1:1939)
+  C[i] = cor(z_and_o, X[ ,i])^2
+
+
+# Finding the more influent species
+which.max(C)
+names_of_species[7]
+
+# Calculating the average quantity of this species among IBD and control
+z_and_o%*%X[, 7]/sum(z_and_o)
+
+o_and_z%*%X[, 7]/sum(o_and_z)
+
+#On ordonne status selon la quantité de cette bactérie
+status_o = z_and_o[order(X[, 7], decreasing = T)]
+inversed_status = o_and_z[order(X[, 7], decreasing = T)]
+
+# True positive rate
+TPR = cumsum(status_o)/sum(z_and_o)
+# False positive rate
+FPR = cumsum(inversed_status)/sum(o_and_z)
+
+#AUC ROC
+plot(FPR, TPR)
+
+
+
+```
+
+What AUC ROC can you reach with the most correlated species?
+the most correlated species are k__Bacteria and p__Actinobacteria. We will keep the first one.
+
+
+Is it the presence or the abscence of this species that is a marker of IBD?
+
+On average, the IBD have 5.998106 and the control have 2.13289 of this baterie. thus, the presence of this bacteria is a marker of IBD.
+
+Are you satisfied? Check quickly with other people around and make a small litterature search.
+Give a reason why this species is marker of the IBD, but may not be relevant for the predicting IBD.
+
+Clean your data according to your findings in order to have relevant prediction from the abundance data.
+
+What is the new best correlated species. What p-value it corresponds to?
+
+Now you should realize that to get a biomarker of IBD, one needs not only the measure of 1 single species but the combination of several species.
+
+
+## Learning a predictor
+
+
+
+
+### Logistic regression
+
+
+Use the package glmnet to use a logistic regression for classification.
+
+Think beforehand of what potential trap you should you be aware of?
+How can you avoid it?
+
+
+```{r}
+library(glmnet)
+
+fit = glmnet(X, z_and_o, family = "binomial")
+coef(fit, s=fit$lambda.1se)
+
+cvfit = cv.glmnet(X, z_and_o, family = "binomial", type.measure = "class")
+plot(cvfit)
+summary(fit)
+
+
+```
+
+What species you find relevant for predicting IBD? Are they in accordance with the litterature?
+
+
+### Bonus: Neural networks
+
+#### Load/intsall keras package
+```{r}
+#install.packages("keras")
+library(keras)
+#install_keras()
+```
+
+
+#### Train a neural network using keras to predict IBD. 
+
+Play around with the hyper parameters of your neural network that to predict the IBD status from the species abundances.
+
+Ask yourself:
+Is it overfitting?
+Do you get any idea of which species is associated to IBD? 
+
