@@ -22,7 +22,7 @@ We focus here on the metagenomic study by Nielsen H.B. et al, published in 2014.
 #source('http://bioconductor.org/biocLite.R')
 #biocLite('phyloseq')
 #library(phyloseq)
-library(curatedMetagenomicData)
+#library(curatedMetagenomicData)
 library(ggplot2)
 library(DescTools)
 
@@ -173,6 +173,7 @@ How can you avoid it?
 ```{r}
 library(glmnet)
 
+set.seed(5)
 fit = glmnet(newX, z_and_o, family = "binomial")
 print(fit)
 
