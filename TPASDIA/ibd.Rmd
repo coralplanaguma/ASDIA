@@ -24,6 +24,8 @@ We focus here on the metagenomic study by Nielsen H.B. et al, published in 2014.
 #library(phyloseq)
 library(curatedMetagenomicData)
 library(ggplot2)
+library(DescTools)
+
 ```
 
 ## Load the data
@@ -104,11 +106,14 @@ FPR = cumsum(inversed_status)/sum(o_and_z)
 plot(FPR, TPR)
 
 
+AUC = trapz(FPR, TPR)
 
+# other method, sale result
+AUC2 <- AUC(FPR, TPR)
 ```
 
 What AUC ROC can you reach with the most correlated species?
-the most correlated species are k__Bacteria and p__Actinobacteria. We will keep the first one.
+The most correlated species are k__Bacteria|p__Actinobacteria. We will keep the first one. We reach a valur of 0.76.
 
 
 Is it the presence or the abscence of this species that is a marker of IBD?
@@ -118,9 +123,35 @@ On average, the IBD have 5.998106 and the control have 2.13289 of this baterie. 
 Are you satisfied? Check quickly with other people around and make a small litterature search.
 Give a reason why this species is marker of the IBD, but may not be relevant for the predicting IBD.
 
+The presence of this bacteria is due to treatments, which means that patients who have IBD and are not treated don't have it and thus their illness can't be detected considering our prediction model.  
+
 Clean your data according to your findings in order to have relevant prediction from the abundance data.
 
+```{r}
+boo = startsWith(names_of_species,"k__Bacteria|p__Actinobacteria")
+to_delete = which(boo == TRUE)
+
+newX = X[, -to_delete]
+newNames <- names_of_species[-to_delete]
+
+```
+
+
 What is the new best correlated species. What p-value it corresponds to?
+```{r}
+n <- ncol(newX)
+newC <- c()
+for (i in 1:n)
+  newC[i] = cor(z_and_o, newX[ ,i])^2
+
+influent_index = which.max(newC)
+newNames[which.max(newC)]
+
+z_and_o%*%newX[, influent_index]/sum(z_and_o)
+
+o_and_z%*%newX[, influent_index]/sum(o_and_z)
+
+```
 
 Now you should realize that to get a biomarker of IBD, one needs not only the measure of 1 single species but the combination of several species.
 
@@ -142,30 +173,62 @@ How can you avoid it?
 ```{r}
 library(glmnet)
 
-fit = glmnet(X, z_and_o, family = "binomial")
-coef(fit, s=fit$lambda.1se)
+fit = glmnet(newX, z_and_o, family = "binomial")
+print(fit)
 
-cvfit = cv.glmnet(X, z_and_o, family = "binomial", type.measure = "class")
+# Cross validation to select lambda
+cvfit = cv.glmnet(newX, z_and_o, family = "binomial", type.measure = "class")
 plot(cvfit)
-summary(fit)
+best_lambda <- cvfit$lambda.min
+
+tmp_coeffs <- coef(cvfit, s = best_lambda)
+df <- data.frame(name = tmp_coeffs@Dimnames[[1]][tmp_coeffs@i + 1], coefficient = tmp_coeffs@x)
+
+df[order(abs(df$coefficient), decreasing = TRUE),]
+
+
 
 
 ```
 
 What species you find relevant for predicting IBD? Are they in accordance with the litterature?
 
+The relevant species for predicting IBD are 
 
 ### Bonus: Neural networks
 
 #### Load/intsall keras package
 ```{r}
-#install.packages("keras")
+install.packages("keras")
 library(keras)
 #install_keras()
 ```
 
 
 #### Train a neural network using keras to predict IBD. 
+
+```{r}
+model <- keras_model_sequential() 
+model %>% 
+    # Initialisation de la première couche avec fonctoin d'activation "relu" et  neurones.
+    layer_dense(units = 256, activation = 'relu', input_shape = 396) %>% 
+    # On associe aléatoirement la valeur 0 à 50% des imahes d'entrée pour éviter l'over fitting.
+    layer_dropout(rate = 0.5) %>% 
+    # Initialisation de la deuxième couche avec 128 neurones.
+    layer_dense(units = 128, activation = 'relu') %>%
+    layer_dropout(rate = 0.5) %>%
+    # Initialisation de dernière couche
+    layer_dense(units = 1, activation = 'sigmoid')
+
+
+# Configuration du modèle pour l'entraînement  
+model %>% compile(
+    loss = 'binary_crossentropy',
+    optimizer = optimizer_rmsprop(lr = 0.001, rho = 0.9, decay = 0),
+    metrics = c('accuracy')
+)
+```
+
 
 Play around with the hyper parameters of your neural network that to predict the IBD status from the species abundances.
 
